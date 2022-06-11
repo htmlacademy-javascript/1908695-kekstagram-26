@@ -9,8 +9,14 @@ const getRandomPositiveInteger = (a, b) => {
 
 const getStringLength = (string, maxlength) => string.length < maxlength || string.length === maxlength;
 
-console.log(getRandomPositiveInteger(2,1e6));
 getStringLength('hello', 10);
+
+const getRandomArrayElement = (elements) => {
+  const randomElement = elements[getRandomPositiveInteger(0, elements.length - 1)];
+  if (randomElement !== elements[(Math.floor(Math.random() * (elements.length)))]) {
+    return randomElement;
+  }   return elements[(Math.floor(Math.random() * (elements.length - 1)))];
+};
 
 //массивы для описания фото
 
@@ -20,7 +26,7 @@ const URLS = [];
 for (let i = 1; i <=25; i++) {
   URLS.push(`photos/${i}.jpg`);
 }
-console.log(URLS);
+
 const DESCRIPTIONS = [
   'мой питомец',
   'доброе утро',
@@ -39,7 +45,10 @@ const DESCRIPTIONS = [
 ];
 
 const LIKES = Array.from({length:186}, (_, index) => index + 15);
-console.log(LIKES);
+
+//массивы для создания комментариев
+const COMMENT_IDS = Array.from({length:1e5}, (_, index) => index + 1);
+
 
 const AVATARS = [];
 for (let i = 1; i <=6; i++) {
@@ -78,20 +87,29 @@ const NAMES = [
   'Юрий'
 ];
 
-const getRandomArrayElement = (elements) => {
-  return elements[getRandomPositiveInteger(0, elements.length - 1)];
-};
-
-const createComment = () => {
-  return {
-    id: getRandomPositiveInteger(2,1e8),
-    avatar: getRandomArrayElement(AVATARS),
-    message: `${getRandomArrayElement(MESSAGES)} + ${getRandomArrayElement(MESSAGES)}`,
-    name: getRandomArrayElement(NAMES)
-  };
-};
-
 const COMMENTS_AMOUNT = getRandomPositiveInteger(1,10);
 
+//функции для генерации комментариев и объектов
+
+const createComment = () => ({
+  id: getRandomArrayElement(COMMENT_IDS),
+  avatar: getRandomArrayElement(AVATARS),
+  message: `${getRandomArrayElement(MESSAGES)} + ${getRandomArrayElement(MESSAGES)}`,
+  name: getRandomArrayElement(NAMES)
+});
+
 const COMMENTS = Array.from({length:COMMENTS_AMOUNT}, createComment);
-console.log(COMMENTS);
+
+const createPhotoDescription = () => ({
+  id: getRandomArrayElement(IDS),
+  avatar: getRandomArrayElement(URLS),
+  message: getRandomArrayElement(DESCRIPTIONS),
+  name: getRandomArrayElement(LIKES),
+  comments: COMMENTS
+});
+createPhotoDescription();
+
+// Массив объектов закомментирован, чтобы линтер не ругался
+// const PhotoDescriptions = Array.from({length:25}, createPhotoDescription);
+
+
