@@ -1,29 +1,10 @@
-//рабочие функции
-
-const getRandomPositiveInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
-  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};
-
-const getStringLength = (string, maxlength) => string.length < maxlength || string.length === maxlength;
-
-getStringLength('hello', 10);
-
-const getRandomArrayElement = (elements) => {
-  const randomElement = elements[getRandomPositiveInteger(0, elements.length - 1)];
-  if (randomElement !== elements[(Math.floor(Math.random() * (elements.length)))]) {
-    return randomElement;
-  }   return elements[(Math.floor(Math.random() * (elements.length - 1)))];
-};
-
 //массивы для описания фото
+const IDS_AMOUNT = 25;
+const IDS = Array.from({length:IDS_AMOUNT}, (_, index) => index + 1);
 
-const IDS = Array.from({length:25}, (_, index) => index + 1);
-
+const URLS_AMOUNT = 25;
 const URLS = [];
-for (let i = 1; i <=25; i++) {
+for (let i = 1; i <=URLS_AMOUNT; i++) {
   URLS.push(`photos/${i}.jpg`);
 }
 
@@ -49,9 +30,9 @@ const LIKES = Array.from({length:186}, (_, index) => index + 15);
 //массивы для создания комментариев
 const COMMENT_IDS = Array.from({length:1e5}, (_, index) => index + 1);
 
-
+const AVATARS_AMOUNT = 6;
 const AVATARS = [];
-for (let i = 1; i <=6; i++) {
+for (let i = 1; i <=AVATARS_AMOUNT; i++) {
   AVATARS.push(`img/avatar-${i}.svg`);
 }
 
@@ -87,7 +68,25 @@ const NAMES = [
   'Юрий'
 ];
 
-const COMMENTS_AMOUNT = getRandomPositiveInteger(1,10);
+//рабочие функции
+
+const getRandomPositiveInteger = (a, b) => {
+  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+};
+
+const getStringLength = (string, maxlength) => string.length < maxlength || string.length === maxlength;
+
+getStringLength('hello', 10);
+
+const getRandomArrayElement = (elements) => {
+  const randomElement = elements[getRandomPositiveInteger(0, elements.length - 1)];
+  if (randomElement !== elements[(Math.floor(Math.random() * (elements.length)))]) {
+    return randomElement;
+  }   return elements[(Math.floor(Math.random() * (elements.length - 1)))];
+};
 
 //функции для генерации комментариев и объектов
 
@@ -98,18 +97,18 @@ const createComment = () => ({
   name: getRandomArrayElement(NAMES)
 });
 
-const COMMENTS = Array.from({length:COMMENTS_AMOUNT}, createComment);
+const commentsAmount = getRandomPositiveInteger(1,10);
+const comments = Array.from({length:commentsAmount}, createComment);
 
 const createPhotoDescription = () => ({
   id: getRandomArrayElement(IDS),
   avatar: getRandomArrayElement(URLS),
   message: getRandomArrayElement(DESCRIPTIONS),
   name: getRandomArrayElement(LIKES),
-  comments: COMMENTS
+  comments: comments
 });
 createPhotoDescription();
 
-// Массив объектов закомментирован, чтобы линтер не ругался
-// const PhotoDescriptions = Array.from({length:25}, createPhotoDescription);
-
-
+// Массив объектов и переменная которая передает необходимое число объектов закомментированы, чтобы линтер не ругался, константу впоследствии подниму в начало модуля
+//const AMOUNT_PHOTO_DESCRIPTIONS = 25;
+// const PhotoDescriptions = Array.from({AMOUNT_PHOTO_DESCRIPTIONS:25}, createPhotoDescription);
