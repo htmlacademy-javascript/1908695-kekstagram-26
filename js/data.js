@@ -86,9 +86,9 @@ const comments = Array.from({length:commentsAmount}, createComment);
 
 const createPhotoDescription = () => ({
   id: getRandomArrayElement(IDS),
-  avatar: getRandomArrayElement(URLS),
-  message: getRandomArrayElement(DESCRIPTIONS),
-  name: getRandomArrayElement(LIKES),
+  url: getRandomArrayElement(URLS),
+  description: getRandomArrayElement(DESCRIPTIONS),
+  likes: getRandomArrayElement(LIKES),
   comments: comments
 });
 createPhotoDescription();
