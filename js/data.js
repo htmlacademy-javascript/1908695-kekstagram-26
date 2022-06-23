@@ -80,14 +80,14 @@ const createComment = () => ({
   name: getRandomArrayElement(NAMES)
 });
 
-function getComments(value) {
+const getComments = (value) => {
   const commentsList= [];
   const commentsAmount = getRandomPositiveInteger(1, value);
   for (let i = 0; i < commentsAmount; i++) {
     commentsList.push(createComment());
   }
   return commentsList;
-}
+};
 
 const createPhotoDescription = () => ({
   id: getRandomArrayElement(IDS),
