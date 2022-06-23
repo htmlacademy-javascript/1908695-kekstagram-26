@@ -10,10 +10,13 @@ const getStringLength = (string, maxlength) => string.length < maxlength || stri
 getStringLength('hello', 10);
 
 const getRandomArrayElement = (elements) => {
-  const randomElement = elements[getRandomPositiveInteger(0, elements.length - 1)];
-  if (randomElement !== elements[(Math.floor(Math.random() * (elements.length)))]) {
-    return randomElement;
-  }   return elements[(Math.floor(Math.random() * (elements.length - 1)))];
+  const randomElement = elements[getRandomPositiveInteger(0, elements.length-1)];
+  let result;
+  if (elements.includes(randomElement)) {
+    result = randomElement;
+    elements.splice(elements.indexOf(randomElement), 0);
+  }
+  return result;
 };
 
 export {getRandomArrayElement, getRandomPositiveInteger};

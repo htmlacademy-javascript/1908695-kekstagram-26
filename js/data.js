@@ -4,7 +4,6 @@ import {getRandomArrayElement, getRandomPositiveInteger} from './util.js';
 const AMOUNT_PHOTO_DESCRIPTIONS = 25;
 const IDS_AMOUNT = 25;
 const IDS = Array.from({length:IDS_AMOUNT}, (_, index) => index + 1);
-
 const URLS_AMOUNT = 25;
 const URLS = [];
 for (let i = 1; i <=URLS_AMOUNT; i++) {
@@ -81,16 +80,23 @@ const createComment = () => ({
   name: getRandomArrayElement(NAMES)
 });
 
-const commentsAmount = getRandomPositiveInteger(1,10);
-const comments = Array.from({length:commentsAmount}, createComment);
+const getComments = (value) => {
+  const commentsList= [];
+  const commentsAmount = getRandomPositiveInteger(1, value);
+  for (let i = 0; i < commentsAmount; i++) {
+    commentsList.push(createComment());
+  }
+  return commentsList;
+};
 
 const createPhotoDescription = () => ({
   id: getRandomArrayElement(IDS),
-  avatar: getRandomArrayElement(URLS),
-  message: getRandomArrayElement(DESCRIPTIONS),
-  name: getRandomArrayElement(LIKES),
-  comments: comments
+  url: getRandomArrayElement(URLS),
+  description: getRandomArrayElement(DESCRIPTIONS),
+  likes: getRandomArrayElement(LIKES),
+  comments: getComments(11)
 });
+
 createPhotoDescription();
 
 const createPhotoDescriptions = () => Array.from({length:AMOUNT_PHOTO_DESCRIPTIONS}, createPhotoDescription);
