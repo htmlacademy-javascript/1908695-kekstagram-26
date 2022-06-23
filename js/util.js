@@ -9,11 +9,12 @@ const getStringLength = (string, maxlength) => string.length < maxlength || stri
 
 getStringLength('hello', 10);
 
-const getRandomArrayElement = (elements) => {
-  const randomElement = elements[getRandomPositiveInteger(0, elements.length - 1)];
-  if (randomElement !== elements[(Math.floor(Math.random() * (elements.length)))]) {
-    return randomElement;
-  }   return elements[(Math.floor(Math.random() * (elements.length - 1)))];
+const getRandomArrayElement = function(elements)  {
+  const randomElement = elements[getRandomPositiveInteger(0, elements.length-1)];
+  if (elements.includes(randomElement)) {
+    elements.splice(elements.indexOf(randomElement), 1);
+  }
+  return randomElement;
 };
 
 export {getRandomArrayElement, getRandomPositiveInteger};
