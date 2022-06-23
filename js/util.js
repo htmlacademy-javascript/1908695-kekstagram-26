@@ -11,10 +11,12 @@ getStringLength('hello', 10);
 
 const getRandomArrayElement = function(elements)  {
   const randomElement = elements[getRandomPositiveInteger(0, elements.length-1)];
+  let result;
   if (elements.includes(randomElement)) {
+    result = randomElement;
     elements.splice(elements.indexOf(randomElement), 1);
   }
-  return randomElement;
+  return result;
 };
 
 export {getRandomArrayElement, getRandomPositiveInteger};
