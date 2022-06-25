@@ -14,3 +14,4 @@ otherUsersPhotoDescriptions.forEach((photoDescription) => {
 });
 otherUserPicturesList.append(otherUserPicturesListFragment);
 
+

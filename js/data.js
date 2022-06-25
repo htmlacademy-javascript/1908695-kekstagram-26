@@ -76,7 +76,7 @@ const NAMES = [
 const createComment = () => ({
   id: getRandomArrayElement(COMMENT_IDS),
   avatar: getRandomArrayElement(AVATARS),
-  message: `${getRandomArrayElement(MESSAGES)} + ${getRandomArrayElement(MESSAGES)}`,
+  message: `${getRandomArrayElement(MESSAGES)}  ${getRandomArrayElement(MESSAGES)}`,
   name: getRandomArrayElement(NAMES)
 });
 
@@ -94,7 +94,7 @@ const createPhotoDescription = () => ({
   url: getRandomArrayElement(URLS),
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomArrayElement(LIKES),
-  comments: getComments(11)
+  comments: getComments(30)
 });
 
 createPhotoDescription();
@@ -102,4 +102,6 @@ createPhotoDescription();
 const createPhotoDescriptions = () => Array.from({length:AMOUNT_PHOTO_DESCRIPTIONS}, createPhotoDescription);
 
 export {createPhotoDescriptions};
+export {createComment};
+export {getComments};
 
