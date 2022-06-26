@@ -82,26 +82,29 @@ const createComment = () => ({
 
 const getComments = (value) => {
   const commentsList= [];
-  const commentsAmount = getRandomPositiveInteger(1, value);
+  const commentsAmount = getRandomPositiveInteger(5, value);
   for (let i = 0; i < commentsAmount; i++) {
     commentsList.push(createComment());
   }
   return commentsList;
 };
 
+const commentssocials = getComments(30);
+
 const createPhotoDescription = () => ({
   id: getRandomArrayElement(IDS),
   url: getRandomArrayElement(URLS),
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomArrayElement(LIKES),
-  comments: getComments(30)
+  comments: commentssocials
 });
+
 
 createPhotoDescription();
 
 const createPhotoDescriptions = () => Array.from({length:AMOUNT_PHOTO_DESCRIPTIONS}, createPhotoDescription);
 
 export {createPhotoDescriptions};
-export {createComment};
 export {getComments};
+export {commentssocials};
 
