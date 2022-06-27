@@ -76,13 +76,13 @@ const NAMES = [
 const createComment = () => ({
   id: getRandomArrayElement(COMMENT_IDS),
   avatar: getRandomArrayElement(AVATARS),
-  message: `${getRandomArrayElement(MESSAGES)} + ${getRandomArrayElement(MESSAGES)}`,
+  message: `${getRandomArrayElement(MESSAGES)}  ${getRandomArrayElement(MESSAGES)}`,
   name: getRandomArrayElement(NAMES)
 });
 
 const getComments = (value) => {
   const commentsList= [];
-  const commentsAmount = getRandomPositiveInteger(1, value);
+  const commentsAmount = getRandomPositiveInteger(5, value);
   for (let i = 0; i < commentsAmount; i++) {
     commentsList.push(createComment());
   }
@@ -94,12 +94,10 @@ const createPhotoDescription = () => ({
   url: getRandomArrayElement(URLS),
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomArrayElement(LIKES),
-  comments: getComments(11)
+  comments: getComments(30)
 });
 
-createPhotoDescription();
-
 const createPhotoDescriptions = () => Array.from({length:AMOUNT_PHOTO_DESCRIPTIONS}, createPhotoDescription);
-
 export {createPhotoDescriptions};
+
 
