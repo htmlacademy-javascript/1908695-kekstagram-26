@@ -1,6 +1,6 @@
-import {createPhotoDescriptions} from './data.js';
+import {otherUsersPhotoDescriptions} from './create-other-user-pictures.js';
 
-const PHOTOS = createPhotoDescriptions();
+const PHOTOS = otherUsersPhotoDescriptions;
 
 const FULLSCREEN_CONTAINER = document.querySelector('.big-picture');
 const FULLSCREEN_PHOTO = FULLSCREEN_CONTAINER.querySelector('.big-picture__img img');
