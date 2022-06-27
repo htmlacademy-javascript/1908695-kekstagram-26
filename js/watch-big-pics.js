@@ -1,7 +1,7 @@
 import {createPhotoDescriptions} from './data.js';
 
 const PHOTOS = createPhotoDescriptions();
-console.log(PHOTOS);
+
 const FULLSCREEN_CONTAINER = document.querySelector('.big-picture');
 const FULLSCREEN_PHOTO = FULLSCREEN_CONTAINER.querySelector('.big-picture__img img');
 const THUMBNAILS = document.querySelectorAll('.picture');
@@ -68,6 +68,4 @@ const addThumbnailClickHandler = (thumbnail, photo) => {
 
 for (let i = 0; i < THUMBNAILS.length; i++) {
   addThumbnailClickHandler(THUMBNAILS[i], PHOTOS[i]);
-  console.log(THUMBNAILS[i]);
-  console.log(PHOTOS[i]);
 }
