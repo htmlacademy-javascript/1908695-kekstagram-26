@@ -89,22 +89,15 @@ const getComments = (value) => {
   return commentsList;
 };
 
-const commentssocials = getComments(30);
-
 const createPhotoDescription = () => ({
   id: getRandomArrayElement(IDS),
   url: getRandomArrayElement(URLS),
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomArrayElement(LIKES),
-  comments: commentssocials
+  comments: getComments(30)
 });
 
-
-createPhotoDescription();
-
 const createPhotoDescriptions = () => Array.from({length:AMOUNT_PHOTO_DESCRIPTIONS}, createPhotoDescription);
-
 export {createPhotoDescriptions};
-export {getComments};
-export {commentssocials};
+
 

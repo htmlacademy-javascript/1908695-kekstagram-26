@@ -1,67 +1,73 @@
 import {createPhotoDescriptions} from './data.js';
-import {commentssocials} from './data.js';
 
-const bigPicturePopup = document.querySelector('.big-picture');
-const popupCancelButton = bigPicturePopup.querySelector('.big-picture__cancel');
-//const socialCommentsCount = bigPicturePopup.querySelector('.social__comment-count');
-const socialCommentsLoader = bigPicturePopup.querySelector('.comments-loader');
-const commentList = bigPicturePopup.querySelector('.social__comments');
-const commentItem = bigPicturePopup.querySelector('.social__comment');
-const body = document.querySelector('body');
-const previewPictures = document.querySelectorAll('.picture__img');
+const PHOTOS = createPhotoDescriptions();
+console.log(PHOTOS);
+const FULLSCREEN_CONTAINER = document.querySelector('.big-picture');
+const FULLSCREEN_PHOTO = FULLSCREEN_CONTAINER.querySelector('.big-picture__img img');
+const THUMBNAILS = document.querySelectorAll('.picture');
+const LIKES_NUMBER = FULLSCREEN_CONTAINER.querySelector('.likes-count');
+const COMMENTS_NUMBER = FULLSCREEN_CONTAINER.querySelector('.comments-count');
+const DESCRIPTION = FULLSCREEN_CONTAINER.querySelector('.social__caption');
+const COMMENT_LIST = FULLSCREEN_CONTAINER.querySelector('.social__comments');
+const COMMENT_LIST_COUNTER = FULLSCREEN_CONTAINER.querySelector('.social__comment-count');
+const COMMENT_LOAD = FULLSCREEN_CONTAINER.querySelector('.comments-loader');
+const PAGE_BODY = document.querySelector('body');
+const FULLSCREEN_CLOSE_BUTTON = FULLSCREEN_CONTAINER.querySelector('.big-picture__cancel');
 
-//описываю объект фото попапа
-const bigElement =  {
-  url: document.querySelector('.big-picture__img img'),
-  likes: document.querySelector('.likes-count'),
-  comments: document.querySelector('.comments-count'),
-  description: document.querySelector('.social__caption')
+//функция для создания элемента по заданным параметрам
+const makeElement = (tagName, className, text) => {
+  const ELEMENT = document.createElement(tagName);
+  ELEMENT.classList.add(className);
+  if (text) {
+    ELEMENT.textContent = text;
+  }
+  return ELEMENT;
 };
 
-//генерирую массив из фото попапов и записываю в нужные селекторы нужные свойства фотографий
-
-const bigPictures = createPhotoDescriptions();
-
-bigPictures.forEach((bigPicture) => {
-  bigElement.url.src = bigPicture.url;
-  bigElement.likes.textContent = bigPicture.likes;
-  bigElement.comments.textContent = String(commentssocials.length);
-  bigElement.description.textContent = bigPicture.description;
-});
-
-//создаю массив из src фото попапов
-const bigPicturesUrls = bigPictures.map((item) =>  item.url);
-
-//описываю функцию, которая при нажатии на превью фото должна выводить фото попап
-const previewClicker = function (preview, fullsize) {
-  preview.addEventListener('click', () => {
-    bigPicturePopup.src = fullsize;
-    bigPicturePopup.classList.remove('hidden');
-    body.classList.add('.modal-open');
-    socialCommentsLoader.classList.add('hidden');
+//функция для просмотра полноэкранного изображения по клику
+const addThumbnailClickHandler = (thumbnail, photo) => {
+  thumbnail.addEventListener('click', () => {
+    FULLSCREEN_CONTAINER.classList.remove('hidden');
+    //описываем объект полноразмерного фото передавая данные из функции createPhotoDescriptions
+    FULLSCREEN_PHOTO.src = photo.url;
+    LIKES_NUMBER.textContent = photo.likes;
+    COMMENTS_NUMBER.textContent = String(photo.comments.length);
+    COMMENT_LIST.innerHTML = '';
+    DESCRIPTION.textContent = photo.description;
+    //создаем комментарии на основе данных ключа comments из функции createPhotoDescriptions
+    photo.comments.forEach((comment) => {
+      const COMMENT_LIST_ITEM = makeElement('li', 'social__comment');
+      COMMENT_LIST.appendChild(COMMENT_LIST_ITEM);
+      const COMMENT_AVATAR = makeElement('img', 'social__picture');
+      COMMENT_AVATAR.style.width = '35px';
+      COMMENT_AVATAR.style.height = '35px';
+      COMMENT_AVATAR.src = comment.avatar;
+      COMMENT_AVATAR.alt = comment.message;
+      COMMENT_LIST_ITEM.appendChild(COMMENT_AVATAR);
+      const COMMENT_CONTENT = makeElement('p', 'social__text', comment.message);
+      COMMENT_LIST_ITEM.appendChild(COMMENT_CONTENT);
+    });
+    //настройки поведения других элементов страницы в момент открытия полноэкранного просмотра фото
+    COMMENT_LOAD.classList.add('hidden');
+    COMMENT_LIST_COUNTER.classList.add('hidden');
+    PAGE_BODY.classList.add('modal-open');
+    //выходим из режима полноэкранного просмотра фото по клику на кнопку закрытия
+    FULLSCREEN_CLOSE_BUTTON.addEventListener(('click'), () => {
+      FULLSCREEN_CONTAINER.classList.add('hidden');
+      PAGE_BODY.classList.remove('modal-open');
+    });
+    //выходим из режима полноэкранного просмотра фото по клику на кнопку esc
+    document.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Escape') {
+        FULLSCREEN_CONTAINER.classList.add('hidden');
+        PAGE_BODY.classList.remove('modal-open');
+      }
+    });
   });
 };
-//перебираю коллекцию из превью фото и перередаю фукнцию клика
-for (let i = 0; i < previewPictures.length; i++) {
-  previewClicker(previewPictures[i], bigPicturesUrls[i]);
+
+for (let i = 0; i < THUMBNAILS.length; i++) {
+  addThumbnailClickHandler(THUMBNAILS[i], PHOTOS[i]);
+  console.log(THUMBNAILS[i]);
+  console.log(PHOTOS[i]);
 }
-//закрываем попап по кнопке
-popupCancelButton.addEventListener('click', () => {
-  bigPicturePopup.classList.add('hidden');
-});
-//закрывваем попап нажав esc
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape') {
-    bigPicturePopup.classList.add('hidden');
-  }
-});
-//генерируем комментарии
-commentssocials.forEach((commentElement) => {
-  const comment = commentItem.cloneNode(true);
-  comment.querySelector('img').src = commentElement.avatar;
-  comment.querySelector('img').alt = commentElement.name;
-  comment.querySelector('.social__text').textContent = commentElement.message;
-  commentList.append(comment);
-});
-
-
