@@ -15,20 +15,27 @@ const COMMENT_LOAD = FULLSCREEN_CONTAINER.querySelector('.comments-loader');
 const PAGE_BODY = document.querySelector('body');
 const FULLSCREEN_CLOSE_BUTTON = FULLSCREEN_CONTAINER.querySelector('.big-picture__cancel');
 
+const openFullScreen = (foo) => {
+  PAGE_BODY.classList.add('modal-open');
+  document.addEventListener('keydown', foo);
+};
 const openFullScreenContainer = () => {
+  openFullScreen(onFullScreenContainerEscKeydown);
   FULLSCREEN_CONTAINER.classList.remove('hidden');
   COMMENT_LOAD.classList.add('hidden');
   COMMENT_LIST_COUNTER.classList.add('hidden');
-  PAGE_BODY.classList.add('modal-open');
-  document.addEventListener('keydown', onFullScreenContainerEscKeydown);
+};
+
+const closeFullScreen = (foo) => {
+  PAGE_BODY.classList.remove('modal-open');
+  document.removeEventListener('keydown', foo);
 };
 
 const closeFullScreenContainer = () => {
+  closeFullScreen(onFullScreenContainerEscKeydown);
   FULLSCREEN_CONTAINER.classList.add('hidden');
   COMMENT_LOAD.classList.remove('hidden');
   COMMENT_LIST_COUNTER.classList.remove('hidden');
-  PAGE_BODY.classList.remove('modal-open');
-  document.removeEventListener('keydown', onFullScreenContainerEscKeydown);
 };
 
 function onFullScreenContainerEscKeydown (evt) {
@@ -82,3 +89,4 @@ for (let i = 0; i < THUMBNAILS.length; i++) {
   addThumbnailClickHandler(THUMBNAILS[i], PHOTOS[i]);
 }
 
+export {closeFullScreen, openFullScreen};
