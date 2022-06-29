@@ -1,4 +1,5 @@
 import {otherUsersPhotoDescriptions} from './create-other-user-pictures.js';
+import {isEscapeKey} from './util.js';
 
 const PHOTOS = otherUsersPhotoDescriptions;
 
@@ -14,6 +15,33 @@ const COMMENT_LOAD = FULLSCREEN_CONTAINER.querySelector('.comments-loader');
 const PAGE_BODY = document.querySelector('body');
 const FULLSCREEN_CLOSE_BUTTON = FULLSCREEN_CONTAINER.querySelector('.big-picture__cancel');
 
+const openFullScreenContainer = () => {
+  FULLSCREEN_CONTAINER.classList.remove('hidden');
+  COMMENT_LOAD.classList.add('hidden');
+  COMMENT_LIST_COUNTER.classList.add('hidden');
+  PAGE_BODY.classList.add('modal-open');
+  document.addEventListener('keydown', onFullScreenContainerEscKeydown);
+};
+
+const closeFullScreenContainer = () => {
+  FULLSCREEN_CONTAINER.classList.add('hidden');
+  COMMENT_LOAD.classList.remove('hidden');
+  COMMENT_LIST_COUNTER.classList.remove('hidden');
+  PAGE_BODY.classList.remove('modal-open');
+  document.removeEventListener('keydown', onFullScreenContainerEscKeydown);
+};
+
+function onFullScreenContainerEscKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeFullScreenContainer();
+  }
+}
+
+FULLSCREEN_CLOSE_BUTTON.addEventListener('click', () => {
+  closeFullScreenContainer();
+});
+
 //функция для создания элемента по заданным параметрам
 const makeElement = (tagName, className, text) => {
   const ELEMENT = document.createElement(tagName);
@@ -27,7 +55,7 @@ const makeElement = (tagName, className, text) => {
 //функция для просмотра полноэкранного изображения по клику
 const addThumbnailClickHandler = (thumbnail, photo) => {
   thumbnail.addEventListener('click', () => {
-    FULLSCREEN_CONTAINER.classList.remove('hidden');
+    openFullScreenContainer();
     //описываем объект полноразмерного фото передавая данные из функции createPhotoDescriptions
     FULLSCREEN_PHOTO.src = photo.url;
     LIKES_NUMBER.textContent = photo.likes;
@@ -47,25 +75,10 @@ const addThumbnailClickHandler = (thumbnail, photo) => {
       const COMMENT_CONTENT = makeElement('p', 'social__text', comment.message);
       COMMENT_LIST_ITEM.appendChild(COMMENT_CONTENT);
     });
-    //настройки поведения других элементов страницы в момент открытия полноэкранного просмотра фото
-    COMMENT_LOAD.classList.add('hidden');
-    COMMENT_LIST_COUNTER.classList.add('hidden');
-    PAGE_BODY.classList.add('modal-open');
-    //выходим из режима полноэкранного просмотра фото по клику на кнопку закрытия
-    FULLSCREEN_CLOSE_BUTTON.addEventListener(('click'), () => {
-      FULLSCREEN_CONTAINER.classList.add('hidden');
-      PAGE_BODY.classList.remove('modal-open');
-    });
-    //выходим из режима полноэкранного просмотра фото по клику на кнопку esc
-    document.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Escape') {
-        FULLSCREEN_CONTAINER.classList.add('hidden');
-        PAGE_BODY.classList.remove('modal-open');
-      }
-    });
   });
 };
 
 for (let i = 0; i < THUMBNAILS.length; i++) {
   addThumbnailClickHandler(THUMBNAILS[i], PHOTOS[i]);
 }
+
