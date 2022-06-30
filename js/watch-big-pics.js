@@ -15,25 +15,25 @@ const COMMENT_LOAD = FULLSCREEN_CONTAINER.querySelector('.comments-loader');
 const PAGE_BODY = document.querySelector('body');
 const FULLSCREEN_CLOSE_BUTTON = FULLSCREEN_CONTAINER.querySelector('.big-picture__cancel');
 
-const openFullScreen = (foo) => {
+const openFullScreen = (foo, node) => {
   PAGE_BODY.classList.add('modal-open');
   document.addEventListener('keydown', foo);
+  node.classList.remove('hidden');
 };
+const closeFullScreen = (foo, node) => {
+  PAGE_BODY.classList.remove('modal-open');
+  document.removeEventListener('keydown', foo);
+  node.classList.add('hidden');
+};
+
 const openFullScreenContainer = () => {
-  openFullScreen(onFullScreenContainerEscKeydown);
-  FULLSCREEN_CONTAINER.classList.remove('hidden');
+  openFullScreen(onFullScreenContainerEscKeydown, FULLSCREEN_CONTAINER);
   COMMENT_LOAD.classList.add('hidden');
   COMMENT_LIST_COUNTER.classList.add('hidden');
 };
 
-const closeFullScreen = (foo) => {
-  PAGE_BODY.classList.remove('modal-open');
-  document.removeEventListener('keydown', foo);
-};
-
 const closeFullScreenContainer = () => {
-  closeFullScreen(onFullScreenContainerEscKeydown);
-  FULLSCREEN_CONTAINER.classList.add('hidden');
+  closeFullScreen(onFullScreenContainerEscKeydown, FULLSCREEN_CONTAINER);
   COMMENT_LOAD.classList.remove('hidden');
   COMMENT_LIST_COUNTER.classList.remove('hidden');
 };
