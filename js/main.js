@@ -6,4 +6,5 @@ openFullScreenContainer();
 closeFullScreenContainer();
 
 import './user-form.js';
+import './watch-big-pics.js';
 

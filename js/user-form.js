@@ -9,6 +9,7 @@ const uploadPhotoEditScreen = uploadForm.querySelector('.img-upload__overlay');
 const uploadSubmitButton = uploadForm.querySelector('#upload-submit');
 const pageBody = document.querySelector('body');
 
+uploadButton.required = 'false';
 //настройка классов для Пристин появляющиеся в DOMe
 const pristine = new Pristine(uploadForm, {
   classTo: 'pristine-custom',
@@ -19,18 +20,32 @@ const pristine = new Pristine(uploadForm, {
   errorTextTag: 'div'
 });
 //функции-валидаторы для Пристин
-const validateCommentLength = (value) =>  value.length >= 0 && value.length <= 140;
+const maxCommentLength = 140;
+const validateCommentLength = (value) =>  value.length >= 0 && value.length <= maxCommentLength;
 
-const validateHashTags = (value) => {
-  const re = /^#[A-Za-z0-9А-Яа-яЁё]{1,19}$/i;
+const validateHashTagsLength = (value) => {
   const arr = value.split(' ');
-  for (let i =0; i< arr.length; i++) {
-    if (arr.length <= 5 && re.test(arr[i])) {
-      return true;
-    } else if (value === '') {
+  for (const arrElem of arr) {
+    if (arrElem.length < 20 || arrElem.length === 20) {
       return true;
     }
   } return false;
+};
+
+const validateHashTagsContent = (value) => {
+  const re = /^#[A-Za-z0-9А-Яа-яЁё]{1,19}$/i;
+  const arr = value.split(' ');
+  for (const arrElem of arr) {
+    if (!re.test(arrElem) && arrElem !== '') {
+      return false;
+    }
+  } return true;
+};
+
+const validateHashTagsAmount = (value) => {
+  const arr = value.split(' ');
+  const maxHashTagsAmounts = 5;
+  return arr.length < maxHashTagsAmounts || arr.length === maxHashTagsAmounts;
 };
 
 const validateHashTagsUnique = (value) => {
@@ -45,12 +60,14 @@ const validateHashTagsUnique = (value) => {
 };
 
 //вот эта функция не отрабатывает, не появляется сообщение (проверка на то, что поле загрузки фото непустое)
-const validateUploadFile = (value) => value !== '';
+//const validateUploadFile = (value) => value !== '';
 
-pristine.addValidator((uploadButton), validateUploadFile, 'добавьте изображение');
+//pristine.addValidator((uploadButton), validateUploadFile, 'добавьте изображение');
 pristine.addValidator(uploadFormCommentfield, validateCommentLength, 'комментарий не может быть длинее 140 символов');
-pristine.addValidator(uploadFormHashtagfield, validateHashTags, 'хэштег должен начинаться с символа #,  содержать от 2 до 20 символов, разделяться пробелом и не повторяться, максимальное количество - 5');
-pristine.addValidator(uploadForm.querySelector('#hashtags'), validateHashTagsUnique, 'хэштеги не должны повторяться');
+pristine.addValidator(uploadFormHashtagfield, validateHashTagsUnique, 'хэштеги не должны повторяться');
+pristine.addValidator(uploadFormHashtagfield, validateHashTagsAmount, 'максимальное количество хештегов - 5');
+pristine.addValidator(uploadFormHashtagfield, validateHashTagsLength, 'максимальная длина хештега - 20 символов, включая решетку');
+pristine.addValidator(uploadFormHashtagfield, validateHashTagsContent, 'хештег должен начинаться с #, минимум 2 символа, допустимы только цифры и буквы русского алфавита или латиница');
 
 //функции для настройки открытия и закрытия формы загрузки фото
 const openFullPhotoEditScreen = () => {
@@ -67,7 +84,7 @@ const closeFullScreenPhotoEditScreen = () => {
 //функции для настройки кнопки отправки
 const blockUploadSubmitButton = () => {
   uploadSubmitButton.disabled = true;
-  uploadSubmitButton.textContent = 'Публикую...';
+  uploadSubmitButton.textContent= 'Публикую...';
 };
 
 const unblockUploadSubmitButton = () => {
@@ -78,19 +95,23 @@ const unblockUploadSubmitButton = () => {
 //функция для обработки и отправки формы
 const onUploadForm = (evt) => {
   evt.preventDefault();
+  blockUploadSubmitButton();
   const isValid = pristine.validate();
   if (isValid) {
-    blockUploadSubmitButton();
     unblockUploadSubmitButton();
     closeFullScreenPhotoEditScreen();
-    evt.target.reset();
   } else {
+    evt.preventDefault();
     unblockUploadSubmitButton();
   }
   new FormData(evt.target);
+  uploadForm.removeEventListener('submit', onUploadForm);
 };
 
-uploadForm.addEventListener('submit', onUploadForm);
+const ImageUploadInit = () => {
+  uploadForm.addEventListener('submit', onUploadForm);
+};
+
 //декларативная функция, так как вызывается раньше объявления
 function onFullScreenContainerEscKeydownForm (evt) {
   if (uploadFormCommentfield === document.activeElement ||
@@ -107,13 +128,16 @@ function onFullScreenContainerEscKeydownForm (evt) {
 
 const onUploadButtonInitNewPhotoLoading = () => {
   openFullPhotoEditScreen();
+  ImageUploadInit();
+  uploadForm.reset();
 };
-//ВОТ ТУТ У МЕНЯ НЕ СРАБАТЫВАЕТ СОБЫТИЕ CHANGE, не понимаю почему
+
 uploadButton.addEventListener('click', onUploadButtonInitNewPhotoLoading);
 
 uploadCancelButton.addEventListener('click', () => {
   closeFullScreenPhotoEditScreen();
   uploadButton.removeEventListener('click', onUploadButtonInitNewPhotoLoading);
   uploadButton.value = '';
+  uploadForm.removeEventListener('submit', onUploadForm);
 });
 

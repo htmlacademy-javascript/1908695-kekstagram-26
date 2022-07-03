@@ -18,6 +18,13 @@ const getRandomArrayElement = (elements) => {
   }
   return result;
 };
+//функция чтобы картинки не повторялись, чуть позже интегрирую в код
+/*const getRandomArrayUniqueElement= (elements) => {
+  const elementsCopy = elements.slice();
+  const randomElement = elementsCopy[getRandomPositiveInteger(0, elements.length-1)];
+  elements.splice(elements.indexOf(randomElement), 1);
+  return randomElement;
+};*/
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
