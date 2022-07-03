@@ -84,25 +84,21 @@ const closeFullScreenPhotoEditScreen = () => {
 //функции для настройки кнопки отправки
 const blockUploadSubmitButton = () => {
   uploadSubmitButton.disabled = true;
-  uploadSubmitButton.textContent= 'Публикую...';
 };
 
 const unblockUploadSubmitButton = () => {
   uploadSubmitButton.disabled = false;
-  uploadSubmitButton.textContent = 'Опубликовать';
 };
 
 //функция для обработки и отправки формы
 const onUploadForm = (evt) => {
   evt.preventDefault();
-  blockUploadSubmitButton();
   const isValid = pristine.validate();
   if (isValid) {
     unblockUploadSubmitButton();
     closeFullScreenPhotoEditScreen();
   } else {
-    evt.preventDefault();
-    unblockUploadSubmitButton();
+    blockUploadSubmitButton();
   }
   new FormData(evt.target);
   uploadForm.removeEventListener('submit', onUploadForm);
