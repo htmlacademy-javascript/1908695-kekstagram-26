@@ -6,10 +6,8 @@ const uploadFormCommentfield = document.querySelector('#description');
 const uploadButton = uploadForm.querySelector('.img-upload__start #upload-file');
 const uploadCancelButton = uploadForm.querySelector('#upload-cancel');
 const uploadPhotoEditScreen = uploadForm.querySelector('.img-upload__overlay');
-const uploadSubmitButton = uploadForm.querySelector('#upload-submit');
 const pageBody = document.querySelector('body');
 
-uploadButton.required = 'false';
 //настройка классов для Пристин появляющиеся в DOMe
 const pristine = new Pristine(uploadForm, {
   classTo: 'pristine-custom',
@@ -70,29 +68,60 @@ pristine.addValidator(uploadFormHashtagfield, validateHashTagsLength, 'макс�
 pristine.addValidator(uploadFormHashtagfield, validateHashTagsContent, 'хештег должен начинаться с #, минимум 2 символа, допустимы только цифры и буквы русского алфавита или латиница');
 
 //функции для настройки открытия и закрытия формы загрузки фото
-const openFullPhotoEditScreen = () => {
+const openUploadForm = () => {
   pageBody.classList.add('modal-open');
-  document.addEventListener('keydown', onFullScreenContainerEscKeydownForm);
+  document.addEventListener('keydown', onUploadEscKeydown);
   uploadPhotoEditScreen.classList.remove('hidden');
 };
-const closeFullScreenPhotoEditScreen = () => {
+const closeUploadForm = () => {
   pageBody.classList.remove('modal-open');
-  document.removeEventListener('keydown', onFullScreenContainerEscKeydownForm);
+  //document.removeEventListener('keydown', onFullScreenContainerEscKeydownForm);
   uploadPhotoEditScreen.classList.add('hidden');
+  uploadFormHashtagfield.value = '';
+  uploadFormCommentfield.value = '';
+  uploadButton.value = '';
 };
 
-//функции для настройки кнопки отправки
+function onUploadEscKeydown (evt) {
+  if (uploadFormCommentfield === document.activeElement ||
+    uploadFormHashtagfield === document.activeElement) {
+    return;
+  }
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeUploadForm();
+    document.removeEventListener('keydown', onUploadEscKeydown);
+  }
+}
+
+uploadButton.addEventListener('change', () => {
+  openUploadForm();
+});
+
+uploadCancelButton.addEventListener('click', () => {
+  closeUploadForm();
+  uploadButton.removeEventListener('change', onUploadEscKeydown);
+});
+
+uploadForm.addEventListener('submit', (evt) => {
+  const isValid = pristine.validate();
+  if (!isValid) {
+    evt.preventDefault();
+  }
+});
+
+/*//функции для настройки кнопки отправки
 const blockUploadSubmitButton = () => {
   uploadSubmitButton.disabled = true;
 };
 
 const unblockUploadSubmitButton = () => {
   uploadSubmitButton.disabled = false;
-};
+};*/
 
 //функция для обработки и отправки формы
-const onUploadForm = (evt) => {
-  evt.preventDefault();
+/*const onUploadForm = (evt) => {
+  //evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
     unblockUploadSubmitButton();
@@ -100,40 +129,17 @@ const onUploadForm = (evt) => {
   } else {
     blockUploadSubmitButton();
   }
-  new FormData(evt.target);
-  uploadForm.removeEventListener('submit', onUploadForm);
-};
+  //new FormData(evt.target);
+  //uploadForm.removeEventListener('submit', onUploadForm);
+};*/
 
-const ImageUploadInit = () => {
+/*const ImageUploadInit = () => {
   uploadForm.addEventListener('submit', onUploadForm);
-};
+};*/
 
-//декларативная функция, так как вызывается раньше объявления
-function onFullScreenContainerEscKeydownForm (evt) {
-  if (uploadFormCommentfield === document.activeElement ||
-    uploadFormHashtagfield === document.activeElement) {
-    return;
-  }
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeFullScreenPhotoEditScreen();
-    uploadButton.value = '';
-    uploadForm.removeEventListener('submit', onUploadForm);
-  }
-}
-
-const onUploadButtonInitNewPhotoLoading = () => {
-  openFullPhotoEditScreen();
-  ImageUploadInit();
+/*const onUploadButtonInitNewPhotoLoading = () => {
+  openUploadForm();
+  //ImageUploadInit();
   uploadForm.reset();
-};
-
-uploadButton.addEventListener('click', onUploadButtonInitNewPhotoLoading);
-
-uploadCancelButton.addEventListener('click', () => {
-  closeFullScreenPhotoEditScreen();
-  uploadButton.removeEventListener('click', onUploadButtonInitNewPhotoLoading);
-  uploadButton.value = '';
-  uploadForm.removeEventListener('submit', onUploadForm);
-});
+};*/
 
