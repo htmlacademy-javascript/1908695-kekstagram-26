@@ -17,6 +17,7 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'text-pristine',
   errorTextTag: 'div'
 });
+
 //функции-валидаторы для Пристин
 const maxCommentLength = 140;
 const validateCommentLength = (value) =>  value.length >= 0 && value.length <= maxCommentLength;
@@ -96,12 +97,14 @@ function onUploadEscKeydown (evt) {
 
 uploadButton.addEventListener('change', () => {
   openUploadForm();
+  uploadCancelButton.addEventListener('click', onUpLoadCancelButton);
 });
 
-uploadCancelButton.addEventListener('click', () => {
+function onUpLoadCancelButton () {
   closeUploadForm();
-  uploadButton.removeEventListener('change', onUploadEscKeydown);
-});
+  uploadButton.removeEventListener('click', onUploadEscKeydown);
+  uploadCancelButton.removeEventListener('click', onUpLoadCancelButton);
+}
 
 uploadForm.addEventListener('submit', (evt) => {
   const isValid = pristine.validate();
@@ -110,36 +113,4 @@ uploadForm.addEventListener('submit', (evt) => {
   }
 });
 
-/*//функции для настройки кнопки отправки
-const blockUploadSubmitButton = () => {
-  uploadSubmitButton.disabled = true;
-};
-
-const unblockUploadSubmitButton = () => {
-  uploadSubmitButton.disabled = false;
-};*/
-
-//функция для обработки и отправки формы
-/*const onUploadForm = (evt) => {
-  //evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
-    unblockUploadSubmitButton();
-    closeFullScreenPhotoEditScreen();
-  } else {
-    blockUploadSubmitButton();
-  }
-  //new FormData(evt.target);
-  //uploadForm.removeEventListener('submit', onUploadForm);
-};*/
-
-/*const ImageUploadInit = () => {
-  uploadForm.addEventListener('submit', onUploadForm);
-};*/
-
-/*const onUploadButtonInitNewPhotoLoading = () => {
-  openUploadForm();
-  //ImageUploadInit();
-  uploadForm.reset();
-};*/
 
