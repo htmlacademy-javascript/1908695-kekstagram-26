@@ -1,4 +1,4 @@
-import {getRandomArrayElement, getRandomPositiveInteger} from './util.js';
+import {getRandomArrayElement, getRandomPositiveInteger, getRandomArrayUniqueElement} from './util.js';
 
 //массивы для описания фото
 const AMOUNT_PHOTO_DESCRIPTIONS = 25;
@@ -74,7 +74,7 @@ const NAMES = [
 //функции для генерации комментариев и объектов
 
 const createComment = () => ({
-  id: getRandomArrayElement(COMMENT_IDS),
+  id: getRandomArrayUniqueElement(COMMENT_IDS),
   avatar: getRandomArrayElement(AVATARS),
   message: `${getRandomArrayElement(MESSAGES)}  ${getRandomArrayElement(MESSAGES)}`,
   name: getRandomArrayElement(NAMES)
@@ -90,8 +90,8 @@ const getComments = (value) => {
 };
 
 const createPhotoDescription = () => ({
-  id: getRandomArrayElement(IDS),
-  url: getRandomArrayElement(URLS),
+  id: getRandomArrayUniqueElement(IDS),
+  url: getRandomArrayUniqueElement(URLS),
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomArrayElement(LIKES),
   comments: getComments(30)
