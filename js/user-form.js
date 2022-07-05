@@ -81,6 +81,7 @@ const closeUploadForm = () => {
   uploadFormHashtagfield.value = '';
   uploadFormCommentfield.value = '';
   uploadButton.value = '';
+  uploadForm.reset();
 };
 
 function onUploadEscKeydown (evt) {
