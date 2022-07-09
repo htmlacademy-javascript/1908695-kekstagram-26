@@ -54,42 +54,7 @@ const destroyImageScaling = () => {
   imageUploadPreview.removeAttribute('style');
 };
 
-//функция для переключения фильтров по выбору радиокнопки
-const effectListToggle = (evt) => {
-  imageUploadPreview.removeAttribute('style');
-  if (evt.target.matches('input[type="radio"]')) {
-    imageUploadPreview.className = '';
-    imageUploadPreview.classList.add(`effects__preview--${evt.target.value}`);
-    console.log(`effects__preview--${evt.target.value}`);
-    scaleControlValue.value = scaleControlDefaultValue;
-    if (evt.target.value === 'none') {
-      imageUploadPreview.className = '';
-    }
-  }
-};
-
-//передаем значение фильтра в атрибут стиля инлайн в превью фото с нужным классом
-const getEffectValue = () => {
-  if (imageUploadPreview.className === 'effects__preview--chrome') {
-    console.log('chrome');
-    imageUploadPreview.style.filter = `grayscale(${effectLevelValue.value})`;
-  } else if (imageUploadPreview.className === 'effects__preview--sepia') {
-    console.log('sepia');
-    imageUploadPreview.style.filter = `sepia(${effectLevelValue.value})`;
-  } else if (imageUploadPreview.className === 'effects__preview--marvin') {
-    console.log('marvin');
-    imageUploadPreview.style.filter = `invert(${effectLevelValue.value}%)`;
-  } else if (imageUploadPreview.className === 'effects__preview--phobos') {
-    console.log('phobos');
-    imageUploadPreview.style.filter = `blur(${effectLevelValue.value}px)`;
-  } else if (imageUploadPreview.className === 'effects__preview--heat') {
-    console.log('heat');
-    imageUploadPreview.style.filter = `brightness(${effectLevelValue.value})`;
-  }imageUploadPreview.style.filter = `heat(${effectLevelValue.value})`;
-};
-
-
-//инициализируем слайдер
+//инициализируем слайдер и настраиваем выбор в зависимости от класса фото + записываем инлайн в атрибут стиля фото
 const initNoUiSlider = () => {
   noUiSlider.create(effectLevelSlider, {
     range: {
@@ -100,24 +65,48 @@ const initNoUiSlider = () => {
     step: 1,
     connect: 'lower',
   });
+  effectLevelSlider.classList.add('hidden');
   effectLevelSlider.noUiSlider.on('update', () => {
     effectLevelValue.value = effectLevelSlider.noUiSlider.get();
-    getEffectValue();
+    switch (imageUploadPreview.className) {
+      case 'effects__preview--chrome':
+        imageUploadPreview.style.filter = `grayscale(${effectLevelValue.value})`;
+        break;
+      case 'effects__preview--sepia':
+        imageUploadPreview.style.filter = `sepia(${effectLevelValue.value})`;
+        break;
+      case 'effects__preview--marvin':
+        imageUploadPreview.style.filter = `invert(${effectLevelValue.value}%)`;
+        break;
+      case 'effects__preview--phobos':
+        imageUploadPreview.style.filter = `blur( ${effectLevelValue.value }px)`;
+        break;
+      case 'effects__preview--heat':
+        imageUploadPreview.style.filter = `brightness(${effectLevelValue.value})`;
+        break;
+    }
   });
 };
 
-//функция меняющая настройки слайдера в зависимости от нажатой радиокнопки с визуальным эффектом
-const initVisualEffectsChange = (evt) => {
+//функция для переключения фильтров по выбору радиокнопки
+const effectListToggle = (evt) => {
+  imageUploadPreview.removeAttribute('style');
   if (evt.target.matches('input[type="radio"]')) {
-
-    if (imageUploadPreview.className === '') {
+    imageUploadPreview.className = '';
+    imageUploadPreview.classList.add(`effects__preview--${evt.target.value}`);
+    scaleControlValue.value = scaleControlDefaultValue;
+    if (evt.target.value === 'none') {
+      imageUploadPreview.className = '';
       effectLevelSlider.classList.add('hidden');
     } else {
       effectLevelSlider.classList.remove('hidden');
     }
-
-    if (evt.target.value === 'effects__preview--chrome') {
-      console.log('IVEchrome');
+  }
+};
+//функция меняющая настройки слайдера в зависимости от нажатой радиокнопки с визуальным эффектом
+const initVisualEffectsChange = (evt) => {
+  if (evt.target.matches('input[type="radio"]')) {
+    if (evt.target.value === 'chrome') {
       effectLevelSlider.noUiSlider.updateOptions({
         range: {
           min: 0,
@@ -126,8 +115,8 @@ const initVisualEffectsChange = (evt) => {
         start: 1,
         step: 0.1
       });
-    } if (evt.target.value === 'sepia') {
-      console.log('IVEsepia');
+    }
+    if (evt.target.value === 'sepia') {
       effectLevelSlider.noUiSlider.updateOptions({
         range: {
           min: 0,
@@ -137,7 +126,6 @@ const initVisualEffectsChange = (evt) => {
         step: 0.1
       });
     } else if (evt.target.value === 'marvin') {
-      console.log('IVEmarvin');
       effectLevelSlider.noUiSlider.updateOptions({
         range: {
           min: 0,
@@ -147,7 +135,6 @@ const initVisualEffectsChange = (evt) => {
         step: 1
       });
     } else if (evt.target.value === 'heat') {
-      console.log('IVEheat');
       effectLevelSlider.noUiSlider.updateOptions({
         range: {
           min: 1,
@@ -157,7 +144,6 @@ const initVisualEffectsChange = (evt) => {
         step: 0.1
       });
     } else if (evt.target.value === 'phobos') {
-      console.log('IVEphobos');
       effectLevelSlider.noUiSlider.updateOptions({
         range: {
           min: 0,
@@ -185,14 +171,11 @@ const onSelectionEffectChange = (evt) => {
 };
 
 const InitImageVisualEffects = () => {
-  effectLevelSlider.classList.add('hidden');
   scaleControlValue.value = scaleControlDefaultValue;
   initNoUiSlider();
   effectList.addEventListener('change', onSelectionEffectChange);
 };
 
-
-InitImageVisualEffects();
-export {initImageScaling, destroyImageScaling};
+export {initImageScaling, destroyImageScaling, onSelectionEffectChange, InitImageVisualEffects, effectList, effectLevelSlider};
 
 
