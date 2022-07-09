@@ -14,7 +14,6 @@ const commentListCounter = fullScreenContainer.querySelector('.social__comment-c
 const commentLoad = fullScreenContainer.querySelector('.comments-loader');
 const pageBody = document.querySelector('body');
 const fullScreenCloseButton = fullScreenContainer.querySelector('.big-picture__cancel');
-const pictureList = document.querySelector('section.pictures');
 
 //функции для закрытия и открытия режима полноэкранного просмотра фото
 const openFullScreenContainer = () => {
@@ -47,12 +46,12 @@ fullScreenCloseButton.addEventListener('click', () => {
 
 //функция для создания элемента по заданным параметрам
 const makeElement = (tagName, className, text) => {
-  const ELEMENT = document.createElement(tagName);
-  ELEMENT.classList.add(className);
+  const element = document.createElement(tagName);
+  element.classList.add(className);
   if (text) {
-    ELEMENT.textContent = text;
+    element.textContent = text;
   }
-  return ELEMENT;
+  return element;
 };
 
 //функция для просмотра полноэкранного изображения по клику
@@ -87,10 +86,4 @@ const thumbnailClicker = () => {
   }
 };
 
-//console.log(pictureList.children);
-//вот тут делегирование не срабатывает, не понимаю почему, все .picture являются детьми элемента в переменной pictureList
-pictureList.addEventListener('click', (evt) => {
-  if (evt.target.className === '.picture') {
-    /*console.log('click');*/ }
-});
 export {thumbnailClicker, openFullScreenContainer, closeFullScreenContainer, makeElement, onFullScreenContainerEscKeydown};

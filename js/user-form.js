@@ -1,4 +1,12 @@
 import {isEscapeKey} from './util.js';
+import {
+  initImageScaling,
+  destroyImageScaling,
+  onSelectionEffectChange,
+  InitImageVisualEffects,
+  effectList,
+  effectLevelSlider
+} from './create-visual-effects.js';
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFormHashtagfield = document.querySelector('#hashtags');
@@ -73,6 +81,8 @@ const openUploadForm = () => {
   pageBody.classList.add('modal-open');
   document.addEventListener('keydown', onUploadEscKeydown);
   uploadPhotoEditScreen.classList.remove('hidden');
+  initImageScaling();
+  InitImageVisualEffects();
 };
 const closeUploadForm = () => {
   pageBody.classList.remove('modal-open');
@@ -81,6 +91,10 @@ const closeUploadForm = () => {
   uploadFormHashtagfield.value = '';
   uploadFormCommentfield.value = '';
   uploadButton.value = '';
+  destroyImageScaling();
+  effectList.removeEventListener('change', onSelectionEffectChange);
+  effectLevelSlider.noUiSlider.destroy();
+  uploadForm.reset();
 };
 
 function onUploadEscKeydown (evt) {
@@ -112,5 +126,4 @@ uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
   }
 });
-
 
