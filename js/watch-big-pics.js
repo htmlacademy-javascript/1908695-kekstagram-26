@@ -1,7 +1,5 @@
-import {otherUsersPhotoDescriptions} from './create-other-user-pictures.js';
 import {isEscapeKey} from './util.js';
-
-const PHOTOS = otherUsersPhotoDescriptions;
+import {bigPhotos} from './api.js';
 
 const fullScreenContainer = document.querySelector('.big-picture');
 const fullScreenPhoto = fullScreenContainer.querySelector('.big-picture__img img');
@@ -82,7 +80,7 @@ const addThumbnailClickHandler = (thumbnail, photo) => {
 
 const thumbnailClicker = () => {
   for (let i = 0; i < thumbnails.length; i++) {
-    addThumbnailClickHandler(thumbnails[i], PHOTOS[i]);
+    addThumbnailClickHandler(thumbnails[i], bigPhotos[i]);
   }
 };
 

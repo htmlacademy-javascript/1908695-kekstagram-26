@@ -1,4 +1,4 @@
-import {isEscapeKey} from './util.js';
+import {isEscapeKey, showAlert} from './util.js';
 import {
   initImageScaling,
   destroyImageScaling,
@@ -7,6 +7,7 @@ import {
   effectList,
   effectLevelSlider
 } from './create-visual-effects.js';
+import {sendData} from './api.js';
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFormHashtagfield = document.querySelector('#hashtags');
@@ -15,6 +16,7 @@ const uploadButton = uploadForm.querySelector('.img-upload__start #upload-file')
 const uploadCancelButton = uploadForm.querySelector('#upload-cancel');
 const uploadPhotoEditScreen = uploadForm.querySelector('.img-upload__overlay');
 const pageBody = document.querySelector('body');
+const submitButton = uploadForm.querySelector('.img-upload__submit');
 
 //настройка классов для Пристин появляющиеся в DOMe
 const pristine = new Pristine(uploadForm, {
@@ -76,6 +78,16 @@ pristine.addValidator(uploadFormHashtagfield, validateHashTagsAmount, 'макс�
 pristine.addValidator(uploadFormHashtagfield, validateHashTagsLength, 'максимальная длина хештега - 20 символов, включая решетку');
 pristine.addValidator(uploadFormHashtagfield, validateHashTagsContent, 'хештег должен начинаться с #, минимум 2 символа, допустимы только цифры и буквы русского алфавита или латиница');
 
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
 //функции для настройки открытия и закрытия формы загрузки фото
 const openUploadForm = () => {
   pageBody.classList.add('modal-open');
@@ -119,11 +131,27 @@ function onUpLoadCancelButton () {
   uploadButton.removeEventListener('click', onUploadEscKeydown);
   uploadCancelButton.removeEventListener('click', onUpLoadCancelButton);
 }
-
-uploadForm.addEventListener('submit', (evt) => {
-  const isValid = pristine.validate();
-  if (!isValid) {
+const uploadNewPicture = (onSuccess) => {
+  uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-  }
-});
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendData(
+        () => {
+          onSuccess();
+          unblockSubmitButton();
+        },
+        () => {
+          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+          unblockSubmitButton();
+        },
+        new FormData(evt.target),
+      );
+    }
+  });
+};
+
+
+export {uploadNewPicture, openUploadForm, closeUploadForm};
 
