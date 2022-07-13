@@ -1,5 +1,5 @@
 import {isEscapeKey} from './util.js';
-import {bigPhotos} from './api.js';
+import {pictures} from './create-other-user-pictures.js';
 
 const fullScreenContainer = document.querySelector('.big-picture');
 const fullScreenPhoto = fullScreenContainer.querySelector('.big-picture__img img');
@@ -12,6 +12,7 @@ const commentListCounter = fullScreenContainer.querySelector('.social__comment-c
 const commentLoad = fullScreenContainer.querySelector('.comments-loader');
 const pageBody = document.querySelector('body');
 const fullScreenCloseButton = fullScreenContainer.querySelector('.big-picture__cancel');
+
 
 //функции для закрытия и открытия режима полноэкранного просмотра фото
 const openFullScreenContainer = () => {
@@ -77,10 +78,10 @@ const addThumbnailClickHandler = (thumbnail, photo) => {
     });
   });
 };
-
+//вот эта фукнция не срабатывает
 const thumbnailClicker = () => {
   for (let i = 0; i < thumbnails.length; i++) {
-    addThumbnailClickHandler(thumbnails[i], bigPhotos[i]);
+    addThumbnailClickHandler(thumbnails[i], pictures[i]);
   }
 };
 

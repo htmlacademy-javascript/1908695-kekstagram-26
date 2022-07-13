@@ -1,15 +1,20 @@
-import {createPhotos} from './create-other-user-pictures.js';
-import {uploadNewPicture, openUploadForm, closeUploadForm} from './user-form.js';
+import {uploadNewPicture, closeUploadForm} from './user-form.js';
 import {showAlert} from './util.js';
-const bigPhotos = [];
 
 function getData (onSuccess) {
   fetch('https://26.javascript.pages.academy/kekstagram/data')
-    .then((response) => response.json())
+    .then((response) => {
+      if(response.ok){
+        return response.json();
+      } else {
+        showAlert('Не удалось загрузить изображения. Пожалуйста, обновите страницу');
+      }
+    })
     .then((photos) => {
       onSuccess(photos);
-      bigPhotos.push(photos);
-      console.log(photos);
+    })
+    .catch(() => {
+      showAlert('Не удалось загрузить изображения. Пожалуйста, обновите страницу');
     });
 }
 
@@ -25,11 +30,11 @@ const sendData = (onSuccess, onFail, body) => {
       if (response.ok) {
         onSuccess();
       } else {
-        onFail('Не удалось отправить форму. Попробуйте ещё раз');
+        onFail();
       }
     })
     .catch(() => {
-      onFail('Не удалось отправить форму. Попробуйте ещё раз');
+      onFail();
     });
 };
 
@@ -37,6 +42,4 @@ export {sendData, getData};
 
 uploadNewPicture(closeUploadForm);
 
-console.log(bigPhotos);
-export {bigPhotos};
 

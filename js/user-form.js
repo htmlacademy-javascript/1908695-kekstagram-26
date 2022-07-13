@@ -17,7 +17,60 @@ const uploadCancelButton = uploadForm.querySelector('#upload-cancel');
 const uploadPhotoEditScreen = uploadForm.querySelector('.img-upload__overlay');
 const pageBody = document.querySelector('body');
 const submitButton = uploadForm.querySelector('.img-upload__submit');
+const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+const successButton = document.querySelector('#success').content.querySelector('.success__button');
+const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorButton = document.querySelector('#error').content.querySelector('.error__button');
 
+//блок с функциями для показа сообщения об ошибке или успехе загрузки фото
+const showSuccessMessage = () => {
+  document.body.append(successMessageTemplate);
+  successButton.addEventListener('click', onSuccessButtonClose);
+  window.addEventListener('click', onSuccessWindowClickClose);
+  document.addEventListener('keydown', onUploadEscKeydown);
+};
+
+
+function onSuccessButtonClose () {
+  successMessageTemplate.classList.add('hidden');
+  successButton.removeEventListener('click', onSuccessButtonClose);
+  window.removeEventListener('click', onSuccessWindowClickClose);
+  document.addEventListener('keydown', onUploadEscKeydown);
+}
+
+function onSuccessWindowClickClose(evt) {
+  const target = evt.target;
+  if (!target.matches('.success__inner'))  {
+    successMessageTemplate.classList.add('hidden');
+    successButton.removeEventListener('click', onSuccessButtonClose);
+    document.removeEventListener('keydown', onUploadEscKeydown);
+    window.removeEventListener('click', onSuccessWindowClickClose);
+  }
+}
+const showErrorMessage = () => {
+  document.body.append(errorMessageTemplate);
+  errorMessageTemplate.style.zIndex = '100';
+  errorButton.addEventListener('click', onErrorButtonClose);
+  document.addEventListener('keydown', onUploadEscKeydown);
+  window.addEventListener('click', onErrorWindowClickClose);
+};
+
+function onErrorButtonClose () {
+  errorMessageTemplate.classList.add('hidden');
+  errorButton.removeEventListener('click', onErrorButtonClose);
+  document.removeEventListener('keydown', onUploadEscKeydown);
+  window.removeEventListener('click', onErrorWindowClickClose);
+}
+
+function onErrorWindowClickClose(evt) {
+  const target = evt.target;
+  if (!target.matches('.error__inner')) {
+    errorMessageTemplate.classList.add('hidden');
+    errorButton.removeEventListener('click', onErrorButtonClose);
+    window.removeEventListener('click', onErrorWindowClickClose);
+    document.removeEventListener('keydown', onUploadEscKeydown);
+  }
+}
 //настройка классов для Пристин появляющиеся в DOMe
 const pristine = new Pristine(uploadForm, {
   classTo: 'pristine-custom',
@@ -98,7 +151,6 @@ const openUploadForm = () => {
 };
 const closeUploadForm = () => {
   pageBody.classList.remove('modal-open');
-  //document.removeEventListener('keydown', onFullScreenContainerEscKeydownForm);
   uploadPhotoEditScreen.classList.add('hidden');
   uploadFormHashtagfield.value = '';
   uploadFormCommentfield.value = '';
@@ -116,7 +168,14 @@ function onUploadEscKeydown (evt) {
   }
   if (isEscapeKey(evt)) {
     evt.preventDefault();
+    successMessageTemplate.classList.add('hidden');
+    errorMessageTemplate.classList.add('hidden');
     closeUploadForm();
+    successButton.removeEventListener('click', onSuccessButtonClose);
+    document.removeEventListener('keydown', onUploadEscKeydown);
+    window.removeEventListener('click', onSuccessWindowClickClose);
+    window.removeEventListener('click', onErrorWindowClickClose);
+    errorButton.removeEventListener('click', onErrorButtonClose);
     document.removeEventListener('keydown', onUploadEscKeydown);
   }
 }
@@ -140,18 +199,18 @@ const uploadNewPicture = (onSuccess) => {
       sendData(
         () => {
           onSuccess();
+          showSuccessMessage();
           unblockSubmitButton();
         },
         () => {
-          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+          showAlert();
           unblockSubmitButton();
         },
         new FormData(evt.target),
       );
-    }
+    } showErrorMessage();
   });
 };
-
 
 export {uploadNewPicture, openUploadForm, closeUploadForm};
 

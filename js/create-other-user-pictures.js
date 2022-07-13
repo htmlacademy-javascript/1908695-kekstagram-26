@@ -1,8 +1,6 @@
 import {getData} from './api.js';
 const otherUserPicturesList = document.querySelector('.pictures');
 const otherUserPicture = document.querySelector('#picture').content.querySelector('.picture');
-//const otherUsersPhotoDescriptions = createPhotoDescriptions();
-
 
 const createPhotos = (otherUsersPhotoDescriptions) => {
   const otherUserPicturesListFragment = document.createDocumentFragment();
@@ -16,8 +14,13 @@ const createPhotos = (otherUsersPhotoDescriptions) => {
   });
   otherUserPicturesList.append(otherUserPicturesListFragment);
 };
+//здесь создаю массив из фото с сервера и передаю в функцию для создания миниатюр
+const pictures = [];
 getData((photos) => {
+  for (let i = 0; i <=photos.length; i++) {
+    pictures.push(photos[i]);
+  }
   createPhotos(photos);
 });
-export {createPhotos};
+export {pictures};
 

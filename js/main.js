@@ -1,5 +1,5 @@
-import {createPhotoDescriptions} from './data.js';
-createPhotoDescriptions();
+//import {createPhotoDescriptions} from './data.js';
+//createPhotoDescriptions();
 import {thumbnailClicker, openFullScreenContainer, closeFullScreenContainer} from './watch-big-pics.js';
 thumbnailClicker();
 openFullScreenContainer();
