@@ -12,4 +12,4 @@ import {closeUploadForm, uploadNewPicture} from './user-form.js';
 getData((photos) => {
   createPhotos(photos);
 });
-uploadNewPicture(closeUploadForm);
+//uploadNewPicture(closeUploadForm);

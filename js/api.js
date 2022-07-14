@@ -24,7 +24,7 @@ const sendData = (onSuccess, onFail, body) => {
     'https://25.javascript.pages.academy/kekstagram',
     {
       method: 'POST',
-      body,
+      body: body,
     },
   )
     .then((response) => {

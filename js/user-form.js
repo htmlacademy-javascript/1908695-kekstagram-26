@@ -8,6 +8,7 @@ import {
   effectLevelSlider
 } from './create-visual-effects.js';
 import {sendData} from './api.js';
+import {uploadFile} from './choose-file.js';
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFormHashtagfield = document.querySelector('#hashtags');
@@ -188,6 +189,8 @@ function onUploadEscKeydown (evt) {
 
 uploadButton.addEventListener('change', () => {
   openUploadForm();
+  console.log('upload');
+  uploadFile();
   uploadCancelButton.addEventListener('click', onUpLoadCancelButton);
 });
 
@@ -196,7 +199,7 @@ function onUpLoadCancelButton () {
   uploadButton.removeEventListener('click', onUploadEscKeydown);
   uploadCancelButton.removeEventListener('click', onUpLoadCancelButton);
 }
-const uploadNewPicture = () => {
+const uploadNewPicture = (onSuccess) => {
   uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
@@ -204,19 +207,20 @@ const uploadNewPicture = () => {
       blockSubmitButton();
       sendData(
         () => {
-          closeUploadForm();
+          onSuccess();
           showSuccessMessage();
           unblockSubmitButton();
         },
         () => {
           showAlert();
           unblockSubmitButton();
+          showErrorMessage();
         },
         new FormData(evt.target),
       );
-    }   showErrorMessage();
+    }
   });
 };
-
-export {uploadNewPicture, openUploadForm, closeUploadForm};
+uploadNewPicture(closeUploadForm);
+export {uploadNewPicture, openUploadForm, closeUploadForm, uploadButton};
 
