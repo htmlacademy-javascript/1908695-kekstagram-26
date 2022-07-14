@@ -27,7 +27,7 @@ const showSuccessMessage = () => {
   document.body.append(successMessageTemplate);
   successButton.addEventListener('click', onSuccessButtonClose);
   window.addEventListener('click', onSuccessWindowClickClose);
-  document.addEventListener('keydown', onUploadEscKeydown);
+  document.addEventListener('keydown', onMessageEscKeyDown);
 };
 
 
@@ -35,7 +35,7 @@ function onSuccessButtonClose () {
   successMessageTemplate.classList.add('hidden');
   successButton.removeEventListener('click', onSuccessButtonClose);
   window.removeEventListener('click', onSuccessWindowClickClose);
-  document.addEventListener('keydown', onUploadEscKeydown);
+  document.addEventListener('keydown', onMessageEscKeyDown);
 }
 
 function onSuccessWindowClickClose(evt) {
@@ -43,7 +43,7 @@ function onSuccessWindowClickClose(evt) {
   if (!target.matches('.success__inner'))  {
     successMessageTemplate.classList.add('hidden');
     successButton.removeEventListener('click', onSuccessButtonClose);
-    document.removeEventListener('keydown', onUploadEscKeydown);
+    document.removeEventListener('keydown', onMessageEscKeyDown);
     window.removeEventListener('click', onSuccessWindowClickClose);
   }
 }
@@ -51,14 +51,14 @@ const showErrorMessage = () => {
   document.body.append(errorMessageTemplate);
   errorMessageTemplate.style.zIndex = '100';
   errorButton.addEventListener('click', onErrorButtonClose);
-  document.addEventListener('keydown', onUploadEscKeydown);
+  document.addEventListener('keydown', onMessageEscKeyDown,);
   window.addEventListener('click', onErrorWindowClickClose);
 };
 
 function onErrorButtonClose () {
   errorMessageTemplate.classList.add('hidden');
   errorButton.removeEventListener('click', onErrorButtonClose);
-  document.removeEventListener('keydown', onUploadEscKeydown);
+  document.removeEventListener('keydown', onMessageEscKeyDown);
   window.removeEventListener('click', onErrorWindowClickClose);
 }
 
@@ -68,7 +68,20 @@ function onErrorWindowClickClose(evt) {
     errorMessageTemplate.classList.add('hidden');
     errorButton.removeEventListener('click', onErrorButtonClose);
     window.removeEventListener('click', onErrorWindowClickClose);
-    document.removeEventListener('keydown', onUploadEscKeydown);
+    document.removeEventListener('keydown', onMessageEscKeyDown);
+  }
+}
+function onMessageEscKeyDown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    successMessageTemplate.classList.add('hidden');
+    errorMessageTemplate.classList.add('hidden');
+    document.body.classList.remove('.error');
+    successButton.removeEventListener('click', onSuccessButtonClose);
+    window.removeEventListener('click', onErrorWindowClickClose);
+    errorButton.removeEventListener('click', onErrorButtonClose);
+    window.removeEventListener('click', onSuccessWindowClickClose);
+    document.removeEventListener('keydown', onMessageEscKeyDown);
   }
 }
 //настройка классов для Пристин появляющиеся в DOMe
@@ -144,10 +157,10 @@ const unblockSubmitButton = () => {
 //функции для настройки открытия и закрытия формы загрузки фото
 const openUploadForm = () => {
   pageBody.classList.add('modal-open');
-  document.addEventListener('keydown', onUploadEscKeydown);
   uploadPhotoEditScreen.classList.remove('hidden');
   initImageScaling();
   InitImageVisualEffects();
+  document.addEventListener('keydown', onUploadEscKeydown);
 };
 const closeUploadForm = () => {
   pageBody.classList.remove('modal-open');
@@ -163,19 +176,12 @@ const closeUploadForm = () => {
 
 function onUploadEscKeydown (evt) {
   if (uploadFormCommentfield === document.activeElement ||
-    uploadFormHashtagfield === document.activeElement) {
+    uploadFormHashtagfield === document.activeElement || !errorMessageTemplate.classList.contains('hidden')) {
     return;
   }
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    successMessageTemplate.classList.add('hidden');
-    errorMessageTemplate.classList.add('hidden');
     closeUploadForm();
-    successButton.removeEventListener('click', onSuccessButtonClose);
-    document.removeEventListener('keydown', onUploadEscKeydown);
-    window.removeEventListener('click', onSuccessWindowClickClose);
-    window.removeEventListener('click', onErrorWindowClickClose);
-    errorButton.removeEventListener('click', onErrorButtonClose);
     document.removeEventListener('keydown', onUploadEscKeydown);
   }
 }
@@ -190,7 +196,7 @@ function onUpLoadCancelButton () {
   uploadButton.removeEventListener('click', onUploadEscKeydown);
   uploadCancelButton.removeEventListener('click', onUpLoadCancelButton);
 }
-const uploadNewPicture = (onSuccess) => {
+const uploadNewPicture = () => {
   uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
@@ -198,7 +204,7 @@ const uploadNewPicture = (onSuccess) => {
       blockSubmitButton();
       sendData(
         () => {
-          onSuccess();
+          closeUploadForm();
           showSuccessMessage();
           unblockSubmitButton();
         },
@@ -208,7 +214,7 @@ const uploadNewPicture = (onSuccess) => {
         },
         new FormData(evt.target),
       );
-    } showErrorMessage();
+    }   showErrorMessage();
   });
 };
 

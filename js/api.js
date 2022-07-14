@@ -1,7 +1,7 @@
 import {uploadNewPicture, closeUploadForm} from './user-form.js';
 import {showAlert} from './util.js';
 
-function getData (onSuccess) {
+const getData = (onSuccess) => {
   fetch('https://26.javascript.pages.academy/kekstagram/data')
     .then((response) => {
       if(response.ok){
@@ -16,7 +16,8 @@ function getData (onSuccess) {
     .catch(() => {
       showAlert('Не удалось загрузить изображения. Пожалуйста, обновите страницу');
     });
-}
+};
+
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(
@@ -37,9 +38,5 @@ const sendData = (onSuccess, onFail, body) => {
       onFail();
     });
 };
-
+//uploadNewPicture(closeUploadForm);
 export {sendData, getData};
-
-uploadNewPicture(closeUploadForm);
-
-
