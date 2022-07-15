@@ -1,18 +1,23 @@
-import {createPhotoDescriptions} from './data.js';
-
+import {addThumbnailClickHandler} from './watch-big-pics.js';
 const otherUserPicturesList = document.querySelector('.pictures');
 const otherUserPicture = document.querySelector('#picture').content.querySelector('.picture');
-const otherUsersPhotoDescriptions = createPhotoDescriptions();
-const otherUserPicturesListFragment = document.createDocumentFragment();
 
-otherUsersPhotoDescriptions.forEach((photoDescription) => {
-  const otherUserPictureElement = otherUserPicture.cloneNode(true);
-  otherUserPictureElement.querySelector('.picture__img').src = photoDescription.url;
-  otherUserPictureElement.querySelector('.picture__comments').textContent= String(photoDescription.comments.length);
-  otherUserPictureElement.querySelector('.picture__likes').textContent = photoDescription.likes;
-  otherUserPicturesListFragment.append(otherUserPictureElement);
-});
-otherUserPicturesList.append(otherUserPicturesListFragment);
+const createPhotos = (otherUsersPhotoDescriptions) => {
+  const otherUserPicturesListFragment = document.createDocumentFragment();
 
+  otherUsersPhotoDescriptions.forEach(({ url, likes, comments, id, description }) => {
+    const otherUserPictureElement = otherUserPicture.cloneNode(true);
+    otherUserPictureElement.querySelector('.picture__img').src = url;
+    otherUserPictureElement.querySelector('.picture__comments').textContent= String(comments.length);
+    otherUserPictureElement.querySelector('.picture__likes').textContent = likes;
+    otherUserPictureElement.querySelector('.picture__img').setAttribute('data-id', id);
+    otherUserPictureElement.addEventListener('click', () => {
+      addThumbnailClickHandler({ url, likes, comments, id, description });
+    });
+    otherUserPicturesListFragment.append(otherUserPictureElement);
+  });
+  otherUserPicturesList.append(otherUserPicturesListFragment);
+};
 
-export {otherUsersPhotoDescriptions};
+export {createPhotos};
+

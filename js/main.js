@@ -1,11 +1,10 @@
-import {createPhotoDescriptions} from './data.js';
-createPhotoDescriptions();
-import {thumbnailClicker, openFullScreenContainer, closeFullScreenContainer} from './watch-big-pics.js';
-thumbnailClicker();
-openFullScreenContainer();
-closeFullScreenContainer();
-
+import {createPhotos} from './create-other-user-pictures.js';
 import './user-form.js';
 import './watch-big-pics.js';
 
+import {getData} from './api.js';
+
+getData((photos) => {
+  createPhotos(photos);
+});
 
