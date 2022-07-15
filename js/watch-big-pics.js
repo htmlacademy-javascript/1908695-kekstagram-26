@@ -66,16 +66,16 @@ const addThumbnailClickHandler = (photo) => {
   commentList.innerHTML = '';
   description.textContent = photo.description;
   //создаем комментарии на основе данных ключа comments из функции createPhotoDescriptions
-  photo.comments.forEach((comment) => {
+  photo.comments.forEach(({ avatar, message, name }) => {
     const commentListItem = makeElement('li', 'social__comment');
     commentList.appendChild(commentListItem);
     const commentAvatar = makeElement('img', 'social__picture');
     commentAvatar.style.width = '35px';
     commentAvatar.style.height = '35px';
-    commentAvatar.src = comment.avatar;
-    commentAvatar.alt = comment.message;
+    commentAvatar.src = avatar;
+    commentAvatar.alt = name;
     commentListItem.appendChild(commentAvatar);
-    const commentContent = makeElement('p', 'social__text', comment.message);
+    const commentContent = makeElement('p', 'social__text', message);
     commentListItem.appendChild(commentContent);
   });
 };
