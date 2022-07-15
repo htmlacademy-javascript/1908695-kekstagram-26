@@ -1,4 +1,3 @@
-import {uploadNewPicture, closeUploadForm} from './user-form.js';
 import {showAlert} from './util.js';
 
 const getData = (onSuccess) => {
@@ -38,5 +37,5 @@ const sendData = (onSuccess, onFail, body) => {
       onFail();
     });
 };
-//uploadNewPicture(closeUploadForm);
+
 export {sendData, getData};

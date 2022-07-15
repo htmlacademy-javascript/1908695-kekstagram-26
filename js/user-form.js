@@ -189,7 +189,6 @@ function onUploadEscKeydown (evt) {
 
 uploadButton.addEventListener('change', () => {
   openUploadForm();
-  console.log('upload');
   uploadFile();
   uploadCancelButton.addEventListener('click', onUpLoadCancelButton);
 });
@@ -199,6 +198,7 @@ function onUpLoadCancelButton () {
   uploadButton.removeEventListener('click', onUploadEscKeydown);
   uploadCancelButton.removeEventListener('click', onUpLoadCancelButton);
 }
+
 const uploadNewPicture = (onSuccess) => {
   uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -214,13 +214,13 @@ const uploadNewPicture = (onSuccess) => {
         () => {
           showAlert();
           unblockSubmitButton();
-          showErrorMessage();
         },
         new FormData(evt.target),
-      );
-    }
+      ); return;
+    }showErrorMessage();
   });
 };
 uploadNewPicture(closeUploadForm);
+
 export {uploadNewPicture, openUploadForm, closeUploadForm, uploadButton};
 
