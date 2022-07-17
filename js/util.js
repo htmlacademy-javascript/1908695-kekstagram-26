@@ -1,4 +1,15 @@
+import {RANDOM_PICTURES_AMOUNT} from './create-other-user-pictures.js';
 const ALERT_SHOW_TIME = 5000;
+
+//функция для выборки случайных неповторяющихся элементов массива в количестве переданном вторым аргументом диапазона
+function getRandomPhotoArray (photosArray) {
+  return photosArray.slice().sort(() => 0.5 - Math.random()).slice(0, RANDOM_PICTURES_AMOUNT);
+}
+
+//функция для сортировки массива по убыванию длины массива комментариев
+function getDiscussedPhotoArray (photosArray) {
+  return photosArray.slice().sort((a, b) => b.comments.length - a.comments.length);
+}
 
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
@@ -30,6 +41,8 @@ const getStringLength = (string, maxlength) => string.length < maxlength || stri
 
 getStringLength('hello', 10);
 
+const getRandomNumber = (array) => array.splice(Math.random()*array.length, 1)[0];
+
 /*const getRandomArrayElement = (elements) => {
   const randomElement = elements[getRandomPositiveInteger(0, elements.length-1)];
   let result;
@@ -59,4 +72,4 @@ const debounce = (callback, timeoutDelay = 500) =>{
   };
 };
 
-export {isEscapeKey, showAlert, debounce};
+export {isEscapeKey, showAlert, debounce, getRandomPhotoArray, getDiscussedPhotoArray};
