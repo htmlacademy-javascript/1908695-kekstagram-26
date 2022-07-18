@@ -41,7 +41,7 @@ const getStringLength = (string, maxlength) => string.length < maxlength || stri
 
 getStringLength('hello', 10);
 
-const getRandomNumber = (array) => array.splice(Math.random()*array.length, 1)[0];
+const getRandomNumber = (array) => array.slice().splice(Math.random()*array.length, 1)[0];
 
 /*const getRandomArrayElement = (elements) => {
   const randomElement = elements[getRandomPositiveInteger(0, elements.length-1)];

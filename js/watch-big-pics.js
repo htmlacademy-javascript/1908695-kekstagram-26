@@ -10,7 +10,7 @@ const commentLoad = fullScreenContainer.querySelector('button.comments-loader');
 const pageBody = document.querySelector('body');
 const fullScreenCloseButton = fullScreenContainer.querySelector('.big-picture__cancel');
 const socialCommentCount = fullScreenContainer.querySelector('div.social__comment-count');
-const COMMENT_STEP = 5;
+
 
 //функции для закрытия и открытия режима полноэкранного просмотра фото
 const openFullScreenContainer = () => {
@@ -27,6 +27,7 @@ const closeFullScreenContainer = () => {
   pageBody.classList.remove('modal-open');
   document.removeEventListener('keydown', onFullScreenContainerEscKeydown);
   fullScreenContainer.classList.add('hidden');
+  commentLoad.removeEventListener('click', onLoadCommentsClick);
 };
 
 //декларативная функция так как вызвана раньше объявления
@@ -58,15 +59,15 @@ const addThumbnailClickHandler = (photo) => {
   fullScreenPhoto.src = photo.url;
   likesNumber.textContent = photo.likes;
   commentsNumber.textContent = String(photo.comments.length);
-  const countComments = (photo.comments.length < 5) ? photo.comments.length : '5';
-  socialCommentCount.textContent=`${countComments} из ${photo.comments.length} коментариев`;
-  if (photo.comments.length > 5 && countComments < photo.comments.length - COMMENT_STEP) {
+  if (photo.comments.length < 4 || photo.comments.length === 4) {
+    commentLoad.classList.add('hidden');
+  } else if (photo.comments.length > 4) {
     commentLoad.classList.remove('hidden');
   }
   commentList.innerHTML = '';
   description.textContent = photo.description;
-  //создаем комментарии на основе данных ключа comments из функции createPhotoDescriptions
-  photo.comments.forEach(({ avatar, message, name }) => {
+  //создаем комментарии на основе данных ключа comments из функции createPhotos
+  photo.comments.forEach(({ avatar, message, name }, index) => {
     const commentListItem = makeElement('li', 'social__comment');
     commentList.appendChild(commentListItem);
     const commentAvatar = makeElement('img', 'social__picture');
@@ -76,8 +77,27 @@ const addThumbnailClickHandler = (photo) => {
     commentAvatar.alt = name;
     commentListItem.appendChild(commentAvatar);
     const commentContent = makeElement('p', 'social__text', message);
+    //проверяем по индексу количество комментариев и всем с индексом больше 4 добавляем класс скрытия
     commentListItem.appendChild(commentContent);
+    if (index > 4) {
+      commentListItem.classList.add('hidden');
+    }
+    commentLoad.addEventListener('click', onLoadCommentsClick);
   });
 };
 
+//функция подгрузки комментариев, которая передается в обработчика клика по кнопке доп загрузки
+function onLoadCommentsClick () {
+  commentList.querySelectorAll('.hidden').forEach((element,index) => {
+    if (index < 5){
+      element.classList.remove('hidden');
+    }
+  });
+  //счетчик комментариев по принципу все элементы минус все спрятанные элементы
+  const countComments = commentList.children.length - commentList.querySelectorAll('.hidden').length;
+  socialCommentCount.textContent=`${countComments} из ${commentList.children.length} коментариев`;
+  if (commentList.querySelectorAll('.hidden').length===0) {
+    commentLoad.classList.add('hidden');
+  }
+}
 export {openFullScreenContainer, closeFullScreenContainer, makeElement, onFullScreenContainerEscKeydown, addThumbnailClickHandler};
