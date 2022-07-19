@@ -10,7 +10,7 @@ function getRandomPhotoArray (photosArray) {
 function getDiscussedPhotoArray (photosArray) {
   return photosArray.slice().sort((a, b) => b.comments.length - a.comments.length);
 }
-
+//функция для отрисовки сообщения с ошибкой если сервер прислал ответ не ОК
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';
@@ -29,37 +29,6 @@ const showAlert = (message) => {
     alertContainer.remove();
   }, ALERT_SHOW_TIME);
 };
-
-/*const getRandomPositiveInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
-  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};*/
-
-const getStringLength = (string, maxlength) => string.length < maxlength || string.length === maxlength;
-
-getStringLength('hello', 10);
-
-const getRandomNumber = (array) => array.slice().splice(Math.random()*array.length, 1)[0];
-
-/*const getRandomArrayElement = (elements) => {
-  const randomElement = elements[getRandomPositiveInteger(0, elements.length-1)];
-  let result;
-  if (elements.includes(randomElement)) {
-    result = randomElement;
-    elements.splice(elements.indexOf(randomElement), 0);
-  }
-  return result;
-};*/
-
-//функция чтобы картинки не повторялись, чуть позже интегрирую в код
-/*const getRandomArrayUniqueElement= (elements) => {
-  const elementsCopy = elements.slice();
-  const randomElement = elementsCopy[getRandomPositiveInteger(0, elements.length-1)];
-  elements.splice(elements.indexOf(randomElement), 1);
-  return randomElement;
-};*/
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
