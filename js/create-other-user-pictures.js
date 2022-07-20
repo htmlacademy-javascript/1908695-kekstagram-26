@@ -1,11 +1,13 @@
 import {addThumbnailClickHandler} from './watch-big-pics.js';
 import {getRandomPhotoArray, getDiscussedPhotoArray} from './util.js';
 
+const RANDOM_PICTURES_AMOUNT = 10;
+const FILTERS = ['filter-default', 'filter-random', 'filter-discussed'];
+
 const otherUserPicturesList = document.querySelector('.pictures');
 const otherUserPicture = document.querySelector('#picture').content.querySelector('.picture');
 const filterChooser = document.querySelector('.img-filters');
-const RANDOM_PICTURES_AMOUNT = 10;
-const FILTERS = ['filter-default', 'filter-random', 'filter-discussed'];
+
 
 function showFilters(arrayPhoto, debounceRenderPhotoElements){
   filterChooser.addEventListener('click', onFilterClick.bind(this, arrayPhoto, debounceRenderPhotoElements));
