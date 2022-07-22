@@ -1,6 +1,9 @@
 import {RANDOM_PICTURES_AMOUNT} from './create-other-user-pictures.js';
 const ALERT_SHOW_TIME = 5000;
 
+const TIMEOUT_DELAY = 500;
+
+
 //функция для выборки случайных неповторяющихся элементов массива в количестве переданном вторым аргументом диапазона
 function getRandomPhotoArray (photosArray) {
   return photosArray.slice().sort(() => 0.5 - Math.random()).slice(0, RANDOM_PICTURES_AMOUNT);
@@ -32,7 +35,8 @@ const showAlert = (message) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const debounce = (callback, timeoutDelay = 500) =>{
+
+const debounce = (callback, timeoutDelay = TIMEOUT_DELAY) =>{
   let timeoutId;
 
   return (...rest) => {

@@ -3,12 +3,17 @@ import {
   initImageScaling,
   destroyImageScaling,
   onSelectionEffectChange,
-  InitImageVisualEffects,
+  initImageVisualEffects,
   effectList,
-  effectLevelSlider
+  effectLevelSlider,
+  imageUploadPreview
 } from './create-visual-effects.js';
 import {sendData} from './api.js';
 import {uploadFile} from './choose-file.js';
+
+const MAX_COMMENT_LENGTH = 140;
+const MAX_HASHTAG_LENGTH = 20;
+const MAX_HASHTAG_AMOUNT = 5;
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFormHashtagfield = document.querySelector('#hashtags');
@@ -26,14 +31,14 @@ const errorButton = document.querySelector('#error').content.querySelector('.err
 //блок с функциями для показа сообщения об ошибке или успехе загрузки фото
 const showSuccessMessage = () => {
   document.body.append(successMessageTemplate);
+  successMessageTemplate.style.zIndex = '100';
   successButton.addEventListener('click', onSuccessButtonClose);
   window.addEventListener('click', onSuccessWindowClickClose);
   document.addEventListener('keydown', onMessageEscKeyDown);
 };
 
-
 function onSuccessButtonClose () {
-  successMessageTemplate.classList.add('hidden');
+  successMessageTemplate.remove();
   successButton.removeEventListener('click', onSuccessButtonClose);
   window.removeEventListener('click', onSuccessWindowClickClose);
   document.addEventListener('keydown', onMessageEscKeyDown);
@@ -42,7 +47,7 @@ function onSuccessButtonClose () {
 function onSuccessWindowClickClose(evt) {
   const target = evt.target;
   if (!target.matches('.success__inner'))  {
-    successMessageTemplate.classList.add('hidden');
+    successMessageTemplate.remove();
     successButton.removeEventListener('click', onSuccessButtonClose);
     document.removeEventListener('keydown', onMessageEscKeyDown);
     window.removeEventListener('click', onSuccessWindowClickClose);
@@ -57,7 +62,7 @@ const showErrorMessage = () => {
 };
 
 function onErrorButtonClose () {
-  errorMessageTemplate.classList.add('hidden');
+  errorMessageTemplate.remove();
   errorButton.removeEventListener('click', onErrorButtonClose);
   document.removeEventListener('keydown', onMessageEscKeyDown);
   window.removeEventListener('click', onErrorWindowClickClose);
@@ -66,7 +71,7 @@ function onErrorButtonClose () {
 function onErrorWindowClickClose(evt) {
   const target = evt.target;
   if (!target.matches('.error__inner')) {
-    errorMessageTemplate.classList.add('hidden');
+    errorMessageTemplate.remove();
     errorButton.removeEventListener('click', onErrorButtonClose);
     window.removeEventListener('click', onErrorWindowClickClose);
     document.removeEventListener('keydown', onMessageEscKeyDown);
@@ -75,8 +80,8 @@ function onErrorWindowClickClose(evt) {
 function onMessageEscKeyDown(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    successMessageTemplate.classList.add('hidden');
-    errorMessageTemplate.classList.add('hidden');
+    errorMessageTemplate.remove();
+    successMessageTemplate.remove();
     document.body.classList.remove('.error');
     successButton.removeEventListener('click', onSuccessButtonClose);
     window.removeEventListener('click', onErrorWindowClickClose);
@@ -96,13 +101,12 @@ const pristine = new Pristine(uploadForm, {
 });
 
 //функции-валидаторы для Пристин
-const maxCommentLength = 140;
-const validateCommentLength = (value) =>  value.length >= 0 && value.length <= maxCommentLength;
+const validateCommentLength = (value) =>  value.length >= 0 && value.length <= MAX_COMMENT_LENGTH;
 
 const validateHashTagsLength = (value) => {
   const arr = value.split(' ');
   for (const arrElem of arr) {
-    if (arrElem.length < 20 || arrElem.length === 20) {
+    if (arrElem.length < MAX_COMMENT_LENGTH || arrElem.length === MAX_HASHTAG_LENGTH) {
       return true;
     }
   } return false;
@@ -120,8 +124,7 @@ const validateHashTagsContent = (value) => {
 
 const validateHashTagsAmount = (value) => {
   const arr = value.split(' ');
-  const maxHashTagsAmounts = 5;
-  return arr.length < maxHashTagsAmounts || arr.length === maxHashTagsAmounts;
+  return arr.length < MAX_HASHTAG_AMOUNT || arr.length === MAX_HASHTAG_AMOUNT;
 };
 
 const validateHashTagsUnique = (value) => {
@@ -135,10 +138,6 @@ const validateHashTagsUnique = (value) => {
   } return true;
 };
 
-//вот эта функция не отрабатывает, не появляется сообщение (проверка на то, что поле загрузки фото непустое)
-//const validateUploadFile = (value) => value !== '';
-
-//pristine.addValidator((uploadButton), validateUploadFile, 'добавьте изображение');
 pristine.addValidator(uploadFormCommentfield, validateCommentLength, 'комментарий не может быть длинее 140 символов');
 pristine.addValidator(uploadFormHashtagfield, validateHashTagsUnique, 'хэштеги не должны повторяться');
 pristine.addValidator(uploadFormHashtagfield, validateHashTagsAmount, 'максимальное количество хештегов - 5');
@@ -160,7 +159,7 @@ const openUploadForm = () => {
   pageBody.classList.add('modal-open');
   uploadPhotoEditScreen.classList.remove('hidden');
   initImageScaling();
-  InitImageVisualEffects();
+  initImageVisualEffects();
   document.addEventListener('keydown', onUploadEscKeydown);
 };
 const closeUploadForm = () => {
@@ -169,6 +168,8 @@ const closeUploadForm = () => {
   uploadFormHashtagfield.value = '';
   uploadFormCommentfield.value = '';
   uploadButton.value = '';
+  imageUploadPreview.src = '';
+  imageUploadPreview.className = '';
   destroyImageScaling();
   effectList.removeEventListener('change', onSelectionEffectChange);
   effectLevelSlider.noUiSlider.destroy();
@@ -177,7 +178,7 @@ const closeUploadForm = () => {
 
 function onUploadEscKeydown (evt) {
   if (uploadFormCommentfield === document.activeElement ||
-    uploadFormHashtagfield === document.activeElement || !errorMessageTemplate.classList.contains('hidden')) {
+    uploadFormHashtagfield === document.activeElement  || document.body.contains(errorMessageTemplate)) {
     return;
   }
   if (isEscapeKey(evt)) {
