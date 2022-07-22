@@ -72,7 +72,7 @@ const addThumbnailClickHandler = ({url, likes, comments, description}) => {
   }
 };
 
- //создаем комментарии на основе данных ключа comments из функции createPhotos
+//создаем комментарии на основе данных ключа comments из функции createPhotos
 function makeComments (photoComments) {
   photoComments.forEach(({ avatar, message, name }, index) => {
     const commentListItem = makeElement('li', 'social__comment');
