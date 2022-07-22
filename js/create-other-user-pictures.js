@@ -1,16 +1,18 @@
 import {addThumbnailClickHandler} from './watch-big-pics.js';
+import {getRandomPhotoArray, getDiscussedPhotoArray} from './util.js';
+
+const RANDOM_PICTURES_AMOUNT = 10;
+const FILTERS = ['filter-default', 'filter-random', 'filter-discussed'];
+
 const otherUserPicturesList = document.querySelector('.pictures');
 const otherUserPicture = document.querySelector('#picture').content.querySelector('.picture');
-<<<<<<< Updated upstream
-
-const createPhotos = (otherUsersPhotoDescriptions) => {
-=======
 const filterChooser = document.querySelector('.img-filters');
 
 
 function showFilters(arrayPhoto, debounceRenderPhotoElements){
   filterChooser.addEventListener('click', onFilterClick.bind(this, arrayPhoto, debounceRenderPhotoElements));
 }
+
 
 function onFilterClick(arrayPhoto, debounceRenderPhotoElements, evt){
   const target = evt.target;
@@ -29,10 +31,9 @@ function onFilterClick(arrayPhoto, debounceRenderPhotoElements, evt){
 
 
 const createPhotos = (otherUsersPhotos) => {
->>>>>>> Stashed changes
   const otherUserPicturesListFragment = document.createDocumentFragment();
-
-  otherUsersPhotoDescriptions.forEach(({ url, likes, comments, id, description }) => {
+  document.querySelectorAll('.pictures .picture').forEach((element) => element.remove());
+  otherUsersPhotos.forEach(({ url, likes, comments, id, description }) => {
     const otherUserPictureElement = otherUserPicture.cloneNode(true);
     otherUserPictureElement.querySelector('.picture__img').src = url;
     otherUserPictureElement.querySelector('.picture__comments').textContent= String(comments.length);
@@ -44,7 +45,8 @@ const createPhotos = (otherUsersPhotos) => {
     otherUserPicturesListFragment.append(otherUserPictureElement);
   });
   otherUserPicturesList.append(otherUserPicturesListFragment);
+  filterChooser.classList.remove('img-filters--inactive');
 };
 
-export {createPhotos};
+export {createPhotos, showFilters, RANDOM_PICTURES_AMOUNT};
 

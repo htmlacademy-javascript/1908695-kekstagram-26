@@ -31,13 +31,14 @@ const errorButton = document.querySelector('#error').content.querySelector('.err
 //блок с функциями для показа сообщения об ошибке или успехе загрузки фото
 const showSuccessMessage = () => {
   document.body.append(successMessageTemplate);
+  successMessageTemplate.style.zIndex = '100';
   successButton.addEventListener('click', onSuccessButtonClose);
   window.addEventListener('click', onSuccessWindowClickClose);
   document.addEventListener('keydown', onMessageEscKeyDown);
 };
 
 function onSuccessButtonClose () {
-  successMessageTemplate.classList.add('hidden');
+  successMessageTemplate.remove();
   successButton.removeEventListener('click', onSuccessButtonClose);
   window.removeEventListener('click', onSuccessWindowClickClose);
   document.addEventListener('keydown', onMessageEscKeyDown);
@@ -46,7 +47,7 @@ function onSuccessButtonClose () {
 function onSuccessWindowClickClose(evt) {
   const target = evt.target;
   if (!target.matches('.success__inner'))  {
-    successMessageTemplate.classList.add('hidden');
+    successMessageTemplate.remove();
     successButton.removeEventListener('click', onSuccessButtonClose);
     document.removeEventListener('keydown', onMessageEscKeyDown);
     window.removeEventListener('click', onSuccessWindowClickClose);
@@ -79,8 +80,8 @@ function onErrorWindowClickClose(evt) {
 function onMessageEscKeyDown(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    successMessageTemplate.classList.add('hidden');
     errorMessageTemplate.remove();
+    successMessageTemplate.remove();
     document.body.classList.remove('.error');
     successButton.removeEventListener('click', onSuccessButtonClose);
     window.removeEventListener('click', onErrorWindowClickClose);
