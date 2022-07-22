@@ -170,12 +170,12 @@ const onSelectionEffectChange = (evt) => {
   effectListToggle(evt);
 };
 
-const InitImageVisualEffects = () => {
+const initImageVisualEffects = () => {
   scaleControlValue.value = scaleControlDefaultValue;
   initNoUiSlider();
   effectList.addEventListener('change', onSelectionEffectChange);
 };
 
-export {initImageScaling, destroyImageScaling, onSelectionEffectChange, InitImageVisualEffects, effectList, effectLevelSlider};
+export {initImageScaling, destroyImageScaling, onSelectionEffectChange, initImageVisualEffects, effectList, effectLevelSlider, imageUploadPreview};
 
 

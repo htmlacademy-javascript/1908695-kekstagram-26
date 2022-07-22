@@ -1,7 +1,8 @@
 import {uploadButton} from './user-form.js';
 
-const imgUploadPreview = document.querySelector('.img-upload__preview img');
 const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
+const imgUploadPreview = document.querySelector('.img-upload__preview img');
+
 
 const uploadFile = () => {
   const file = uploadButton.files[0];

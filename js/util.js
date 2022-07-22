@@ -1,4 +1,5 @@
 const ALERT_SHOW_TIME = 5000;
+const TIMEOUT_DELAY = 500;
 
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
@@ -26,7 +27,12 @@ const showAlert = (message) => {
   return Math.floor(result);
 };*/
 
+<<<<<<< Updated upstream
 const getStringLength = (string, maxlength) => string.length < maxlength || string.length === maxlength;
+=======
+const debounce = (callback, timeoutDelay = TIMEOUT_DELAY) =>{
+  let timeoutId;
+>>>>>>> Stashed changes
 
 getStringLength('hello', 10);
 
